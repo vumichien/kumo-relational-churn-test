@@ -1,0 +1,42 @@
+{
+  "labelled_train_val_rows": 3909248,
+  "points": {
+    "s1": {
+      "rows_per_estimator": 1000,
+      "estimators": 8,
+      "total_context_rows": 8000,
+      "share_of_labelled_train_val_rows": 0.00205,
+      "test_auroc": {
+        "mean": 0.6959,
+        "min": 0.6956,
+        "max": 0.6962,
+        "n": 3
+      }
+    },
+    "s2": {
+      "rows_per_estimator": 5000,
+      "estimators": 8,
+      "total_context_rows": 40000,
+      "share_of_labelled_train_val_rows": 0.01023,
+      "test_auroc": {
+        "mean": 0.697,
+        "min": 0.6968,
+        "max": 0.6972,
+        "n": 3
+      }
+    },
+    "k1": {
+      "rows_per_estimator": 20000,
+      "estimators": 8,
+      "total_context_rows": 160000,
+      "share_of_labelled_train_val_rows": 0.04093,
+      "test_auroc": {
+        "mean": 0.6988,
+        "min": 0.6983,
+        "max": 0.6992,
+        "n": 3
+      }
+    }
+  },
+  "note": "context rows drawn by recency (NVIDIA's 'latest' mode), 8 estimators, other settings as K1"
+}

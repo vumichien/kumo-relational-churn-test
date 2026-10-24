@@ -1,0 +1,623 @@
+{
+  "task": "RelBench rel-hm/user-churn, test split (74,575 rows, t = 2020-09-14)",
+  "metric": "test AUROC recomputed from results/preds with sklearn roc_auc_score",
+  "machine": "spark: NVIDIA GB10 (20-core Arm CPU, 121 GiB shared CPU/GPU memory), shared with another tenant's model servers",
+  "gate": {
+    "run": "k1-s0",
+    "auroc": 0.6992494463920593,
+    "auroc_sklearn_from_preds": 0.6992494246786757,
+    "target": 0.6992,
+    "tolerance": 0.005,
+    "agreement_tolerance": 0.0001,
+    "passed": true,
+    "time": "2026-10-24 20:21:20 JST"
+  },
+  "configs": {
+    "k1": {
+      "label": "Kumo Relational, NVIDIA's settings",
+      "role": "kumo_relational",
+      "seeds": {
+        "s0": {
+          "test_auroc": 0.699249,
+          "script_value": 0.6992494463920593,
+          "rows": 74575
+        },
+        "s1": {
+          "test_auroc": 0.698334,
+          "script_value": 0.6983341574668884,
+          "rows": 74575,
+          "test_auroc_from_churn_scores": 0.698334
+        },
+        "s2": {
+          "test_auroc": 0.698754,
+          "script_value": 0.6987544298171997,
+          "rows": 74575,
+          "test_auroc_from_churn_scores": 0.698754
+        }
+      },
+      "test_auroc": {
+        "mean": 0.6988,
+        "min": 0.6983,
+        "max": 0.6992,
+        "n": 3
+      },
+      "seed0_timing": {
+        "status": "done",
+        "wall_s_process": 58.02,
+        "flags": [],
+        "clean_timing": true,
+        "peak_rss_mb": 12230.9,
+        "peak_gpu_mb": 2548.6,
+        "fallback_used": null,
+        "infra_stops": 0,
+        "start": "2026-10-24 20:20:22 JST",
+        "mem_available_min_gib": 21.3,
+        "seconds_to_preds_written": 54.49,
+        "seconds_by_stage": {
+          "load_and_prepare_data": 15.08,
+          "load_model": 1.54,
+          "sample_context_and_fit": 12.35,
+          "sample_queries_and_predict": 25.49,
+          "total": 54.47,
+          "to_preds_written": 54.49
+        }
+      },
+      "missing_seeds": []
+    },
+    "k2": {
+      "label": "Kumo Relational, context from the training weeks only",
+      "role": "kumo_relational",
+      "seeds": {
+        "s0": {
+          "test_auroc": 0.699393,
+          "script_value": 0.6993933320045471,
+          "rows": 74575,
+          "test_auroc_from_churn_scores": 0.699393
+        },
+        "s1": {
+          "test_auroc": 0.699646,
+          "script_value": 0.6996460556983948,
+          "rows": 74575,
+          "test_auroc_from_churn_scores": 0.699646
+        },
+        "s2": {
+          "test_auroc": 0.700274,
+          "script_value": 0.700273871421814,
+          "rows": 74575,
+          "test_auroc_from_churn_scores": 0.700274
+        }
+      },
+      "test_auroc": {
+        "mean": 0.6998,
+        "min": 0.6994,
+        "max": 0.7003,
+        "n": 3
+      },
+      "seed0_timing": {
+        "status": "done",
+        "wall_s_process": 50.02,
+        "flags": [],
+        "clean_timing": true,
+        "peak_rss_mb": 12203.6,
+        "peak_gpu_mb": 2548.8,
+        "fallback_used": null,
+        "infra_stops": 0,
+        "start": "2026-10-24 20:24:55 JST",
+        "mem_available_min_gib": 21.2,
+        "seconds_to_preds_written": 45.29,
+        "seconds_by_stage": {
+          "load_and_prepare_data": 7.14,
+          "load_model": 1.23,
+          "sample_context_and_fit": 11.65,
+          "sample_queries_and_predict": 25.25,
+          "total": 45.27,
+          "to_preds_written": 45.29
+        }
+      },
+      "missing_seeds": []
+    },
+    "k3": {
+      "label": "Kumo Relational, no past churn labels",
+      "role": "kumo_relational",
+      "seeds": {
+        "s0": {
+          "test_auroc": 0.590441,
+          "script_value": 0.5904409885406494,
+          "rows": 74575,
+          "test_auroc_from_churn_scores": 0.590441
+        },
+        "s1": {
+          "test_auroc": 0.590206,
+          "script_value": 0.5902062058448792,
+          "rows": 74575,
+          "test_auroc_from_churn_scores": 0.590206
+        },
+        "s2": {
+          "test_auroc": 0.590435,
+          "script_value": 0.5904349088668823,
+          "rows": 74575,
+          "test_auroc_from_churn_scores": 0.590435
+        }
+      },
+      "test_auroc": {
+        "mean": 0.5904,
+        "min": 0.5902,
+        "max": 0.5904,
+        "n": 3
+      },
+      "seed0_timing": {
+        "status": "done",
+        "wall_s_process": 40.01,
+        "flags": [],
+        "clean_timing": true,
+        "peak_rss_mb": 11722.0,
+        "peak_gpu_mb": 2468.2,
+        "fallback_used": null,
+        "infra_stops": 0,
+        "start": "2026-10-24 20:27:23 JST",
+        "mem_available_min_gib": 22.4,
+        "seconds_to_preds_written": 35.23,
+        "seconds_by_stage": {
+          "load_and_prepare_data": 1.82,
+          "load_model": 1.8,
+          "sample_context_and_fit": 10.38,
+          "sample_queries_and_predict": 21.2,
+          "total": 35.21,
+          "to_preds_written": 35.23
+        }
+      },
+      "missing_seeds": []
+    },
+    "k4": {
+      "label": "Kumo Relational, no related tables",
+      "role": "kumo_relational",
+      "seeds": {
+        "s0": {
+          "test_auroc": 0.694067,
+          "script_value": 0.6940672993659973,
+          "rows": 74575,
+          "test_auroc_from_churn_scores": 0.694067
+        },
+        "s1": {
+          "test_auroc": 0.693725,
+          "script_value": 0.6937252283096313,
+          "rows": 74575,
+          "test_auroc_from_churn_scores": 0.693725
+        },
+        "s2": {
+          "test_auroc": 0.693827,
+          "script_value": 0.6938266754150391,
+          "rows": 74575,
+          "test_auroc_from_churn_scores": 0.693826
+        }
+      },
+      "test_auroc": {
+        "mean": 0.6939,
+        "min": 0.6937,
+        "max": 0.6941,
+        "n": 3
+      },
+      "seed0_timing": {
+        "status": "done",
+        "wall_s_process": 46.01,
+        "flags": [],
+        "clean_timing": true,
+        "peak_rss_mb": 11914.3,
+        "peak_gpu_mb": 2437.1,
+        "fallback_used": null,
+        "infra_stops": 0,
+        "start": "2026-10-24 20:29:23 JST",
+        "mem_available_min_gib": 22.73,
+        "seconds_to_preds_written": 41.02,
+        "seconds_by_stage": {
+          "load_and_prepare_data": 7.73,
+          "load_model": 1.2,
+          "sample_context_and_fit": 8.17,
+          "sample_queries_and_predict": 23.89,
+          "total": 41.0,
+          "to_preds_written": 41.02
+        }
+      },
+      "missing_seeds": []
+    },
+    "k5": {
+      "label": "Kumo Relational, the library's defaults",
+      "role": "kumo_relational",
+      "seeds": {
+        "s0": {
+          "test_auroc": 0.695913,
+          "script_value": 0.6959134340286255,
+          "rows": 74575,
+          "test_auroc_from_churn_scores": 0.695914
+        },
+        "s1": {
+          "test_auroc": 0.69724,
+          "script_value": 0.6972396373748779,
+          "rows": 74575,
+          "test_auroc_from_churn_scores": 0.697238
+        },
+        "s2": {
+          "test_auroc": 0.696206,
+          "script_value": 0.696205735206604,
+          "rows": 74575,
+          "test_auroc_from_churn_scores": 0.696206
+        }
+      },
+      "test_auroc": {
+        "mean": 0.6965,
+        "min": 0.6959,
+        "max": 0.6972,
+        "n": 3
+      },
+      "seed0_timing": {
+        "status": "done",
+        "wall_s_process": 32.01,
+        "flags": [],
+        "clean_timing": true,
+        "peak_rss_mb": 6495.1,
+        "peak_gpu_mb": 5954.0,
+        "fallback_used": null,
+        "infra_stops": 0,
+        "start": "2026-10-24 20:35:32 JST",
+        "mem_available_min_gib": 14.3,
+        "seconds_to_preds_written": 29.44,
+        "seconds_by_stage": {
+          "load_and_prepare_data": 7.58,
+          "load_model": 1.2,
+          "sample_context_and_fit": 3.47,
+          "sample_queries_and_predict": 17.17,
+          "total": 29.42,
+          "to_preds_written": 29.44
+        }
+      },
+      "missing_seeds": []
+    },
+    "t1": {
+      "label": "Kumo Tabular on the hand-built features",
+      "role": "kumo_tabular",
+      "seeds": {
+        "s0": {
+          "test_auroc": 0.692492,
+          "script_value": 0.6924922171738989,
+          "rows": 74575,
+          "context_form": "per_estimator_blocks",
+          "context_rows": 160000
+        },
+        "s1": {
+          "test_auroc": 0.692952,
+          "script_value": 0.6929520804035046,
+          "rows": 74575,
+          "context_form": "per_estimator_blocks",
+          "context_rows": 160000
+        },
+        "s2": {
+          "test_auroc": 0.692777,
+          "script_value": 0.6927771553907082,
+          "rows": 74575,
+          "context_form": "per_estimator_blocks",
+          "context_rows": 160000
+        }
+      },
+      "test_auroc": {
+        "mean": 0.6927,
+        "min": 0.6925,
+        "max": 0.693,
+        "n": 3
+      },
+      "seed0_timing": {
+        "status": "done",
+        "wall_s_process": 108.05,
+        "flags": [],
+        "clean_timing": true,
+        "peak_rss_mb": 12830.0,
+        "peak_gpu_mb": 6699.0,
+        "fallback_used": null,
+        "infra_stops": 0,
+        "start": "2026-10-24 20:43:12 JST",
+        "mem_available_min_gib": 16.28,
+        "seconds_to_preds_written": 103.21,
+        "seconds_by_stage": {
+          "load_data": 1.33,
+          "load_model": 1.12,
+          "fit": 26.38,
+          "predict": 74.34,
+          "total": 103.21
+        }
+      },
+      "missing_seeds": []
+    },
+    "l1": {
+      "label": "LightGBM on the hand-built features (tuned)",
+      "role": "flat_table",
+      "seeds": {
+        "s0": {
+          "test_auroc": 0.693908,
+          "script_value": 0.6939075876617936,
+          "rows": 74575,
+          "val_auroc": 0.700709,
+          "train_rows": 3832692,
+          "train_subsample": 0,
+          "best_params": {
+            "verbosity": -1,
+            "bagging_freq": 1,
+            "max_depth": 4,
+            "learning_rate": 0.019047678084282035,
+            "num_leaves": 148,
+            "subsample": 0.9474354711971047,
+            "colsample_bytree": 0.545755905662568,
+            "lambda_l1": 1.40158486751883e-05,
+            "lambda_l2": 4.4213624757079423e-07,
+            "min_data_in_leaf": 78,
+            "objective": "binary",
+            "metric": "auc"
+          }
+        },
+        "s1": {
+          "test_auroc": 0.694091,
+          "script_value": 0.694090899395955,
+          "rows": 74575,
+          "val_auroc": 0.700124,
+          "train_rows": 3832692,
+          "train_subsample": 0,
+          "best_params": {
+            "verbosity": -1,
+            "bagging_freq": 1,
+            "max_depth": 6,
+            "learning_rate": 0.011957309429716375,
+            "num_leaves": 430,
+            "subsample": 0.7009585253769215,
+            "colsample_bytree": 0.24422963724494157,
+            "lambda_l1": 0.6041911560283396,
+            "lambda_l2": 1.8787800155635633e-09,
+            "min_data_in_leaf": 68,
+            "objective": "binary",
+            "metric": "auc"
+          }
+        },
+        "s2": {
+          "test_auroc": 0.692619,
+          "script_value": 0.6926185769422204,
+          "rows": 74575,
+          "val_auroc": 0.699333,
+          "train_rows": 3832692,
+          "train_subsample": 0,
+          "best_params": {
+            "verbosity": -1,
+            "bagging_freq": 1,
+            "max_depth": 5,
+            "learning_rate": 0.0059399087133854,
+            "num_leaves": 853,
+            "subsample": 0.7499097034727573,
+            "colsample_bytree": 0.41025003859455555,
+            "lambda_l1": 1.3495014854732609e-09,
+            "lambda_l2": 0.09419967194117411,
+            "min_data_in_leaf": 27,
+            "objective": "binary",
+            "metric": "auc"
+          }
+        }
+      },
+      "test_auroc": {
+        "mean": 0.6935,
+        "min": 0.6926,
+        "max": 0.6941,
+        "n": 3
+      },
+      "seed0_timing": {
+        "status": "done",
+        "wall_s_process": 1278.32,
+        "flags": [],
+        "clean_timing": true,
+        "peak_rss_mb": 10261.3,
+        "peak_gpu_mb": null,
+        "fallback_used": null,
+        "infra_stops": 0,
+        "start": "2026-10-24 20:48:33 JST",
+        "mem_available_min_gib": 28.75,
+        "seconds_to_preds_written": 1276.46,
+        "seconds_by_stage": {
+          "load_features": {
+            "seconds": 0.18,
+            "peak_rss_mb": 5309.2,
+            "rows": {
+              "train": 3832692,
+              "val": 76556,
+              "test": 74575
+            }
+          },
+          "materialize": {
+            "seconds": 279.27,
+            "peak_rss_mb": 7220.4,
+            "train_rows": 3832692,
+            "train_cols": 73
+          },
+          "tune": {
+            "seconds": 994.92,
+            "peak_rss_mb": 10261.3
+          },
+          "predict": {
+            "seconds": 0.58,
+            "peak_rss_mb": 10261.3
+          }
+        }
+      },
+      "missing_seeds": [],
+      "val_auroc": {
+        "mean": 0.7001,
+        "min": 0.6993,
+        "max": 0.7007,
+        "n": 3
+      },
+      "train_rows": [
+        3832692
+      ]
+    },
+    "l2": {
+      "label": "LightGBM on the customer table and past labels (tuned)",
+      "role": "flat_table",
+      "seeds": {
+        "s0": {
+          "test_auroc": 0.694631,
+          "script_value": 0.6946311534715379,
+          "rows": 74575,
+          "val_auroc": 0.698807,
+          "train_rows": 3832692,
+          "train_subsample": 0,
+          "best_params": {
+            "verbosity": -1,
+            "bagging_freq": 1,
+            "max_depth": 7,
+            "learning_rate": 0.02693883019285411,
+            "num_leaves": 618,
+            "subsample": 0.567639023847052,
+            "colsample_bytree": 0.45247205937195945,
+            "lambda_l1": 0.0028770084050677926,
+            "lambda_l2": 2.3761404778025532e-05,
+            "min_data_in_leaf": 90,
+            "objective": "binary",
+            "metric": "auc"
+          }
+        },
+        "s1": {
+          "test_auroc": 0.694451,
+          "script_value": 0.6944513994748374,
+          "rows": 74575,
+          "val_auroc": 0.698671,
+          "train_rows": 3832692,
+          "train_subsample": 0,
+          "best_params": {
+            "verbosity": -1,
+            "bagging_freq": 1,
+            "max_depth": 11,
+            "learning_rate": 0.011650124592172255,
+            "num_leaves": 709,
+            "subsample": 0.34973984945575975,
+            "colsample_bytree": 0.7021758812975045,
+            "lambda_l1": 0.22195080216559018,
+            "lambda_l2": 1.523641430706564e-09,
+            "min_data_in_leaf": 76,
+            "objective": "binary",
+            "metric": "auc"
+          }
+        },
+        "s2": {
+          "test_auroc": 0.694392,
+          "script_value": 0.6943924207753771,
+          "rows": 74575,
+          "val_auroc": 0.698589,
+          "train_rows": 3832692,
+          "train_subsample": 0,
+          "best_params": {
+            "verbosity": -1,
+            "bagging_freq": 1,
+            "max_depth": 4,
+            "learning_rate": 0.01561315308585793,
+            "num_leaves": 233,
+            "subsample": 0.15159840009448383,
+            "colsample_bytree": 0.2592908967170317,
+            "lambda_l1": 3.1496540168317234e-06,
+            "lambda_l2": 4.7629370958981e-05,
+            "min_data_in_leaf": 21,
+            "objective": "binary",
+            "metric": "auc"
+          }
+        }
+      },
+      "test_auroc": {
+        "mean": 0.6945,
+        "min": 0.6944,
+        "max": 0.6946,
+        "n": 3
+      },
+      "seed0_timing": {
+        "status": "done",
+        "wall_s_process": 216.06,
+        "flags": [],
+        "clean_timing": true,
+        "peak_rss_mb": 5950.9,
+        "peak_gpu_mb": null,
+        "fallback_used": null,
+        "infra_stops": 0,
+        "start": "2026-10-24 21:45:08 JST",
+        "mem_available_min_gib": 33.51,
+        "seconds_to_preds_written": 213.64,
+        "seconds_by_stage": {
+          "load_features": {
+            "seconds": 3.16,
+            "peak_rss_mb": 3944.4,
+            "rows": {
+              "train": 3832692,
+              "val": 76556,
+              "test": 74575
+            }
+          },
+          "materialize": {
+            "seconds": 24.99,
+            "peak_rss_mb": 4565.6,
+            "train_rows": 3832692,
+            "train_cols": 27
+          },
+          "tune": {
+            "seconds": 184.86,
+            "peak_rss_mb": 5950.9
+          },
+          "predict": {
+            "seconds": 0.05,
+            "peak_rss_mb": 5950.9
+          }
+        }
+      },
+      "missing_seeds": [],
+      "val_auroc": {
+        "mean": 0.6987,
+        "min": 0.6986,
+        "max": 0.6988,
+        "n": 3
+      },
+      "train_rows": [
+        3832692
+      ]
+    }
+  },
+  "agreement_failures": [],
+  "lgbm_budget": {
+    "l1_s0_wall_s": 1278.32,
+    "projected_remaining_s": 6392,
+    "rule": "remaining L1 and L2 runs each take as long as L1 seed 0; over 8 h -> seed 0 only",
+    "seed0_only": false,
+    "time": "2026-10-24 21:09:51 JST"
+  },
+  "ds_features_build": {
+    "load_tables": {
+      "seconds": 1.69,
+      "peak_rss_mb": 3735.3,
+      "label_rows": {
+        "train": 3832692,
+        "val": 76556,
+        "test": 74575
+      },
+      "transactions_rows_upto_test": 15187287
+    },
+    "features_val": {
+      "seconds": 8.71,
+      "peak_rss_mb": 10565.9,
+      "rows": 76556,
+      "columns": 74,
+      "file": "val.parquet"
+    },
+    "features_test": {
+      "seconds": 8.77,
+      "peak_rss_mb": 10565.9,
+      "rows": 74575,
+      "columns": 73,
+      "file": "test.parquet"
+    },
+    "features_train": {
+      "seconds": 40.39,
+      "peak_rss_mb": 11072.6,
+      "rows": 3832692,
+      "columns": 74,
+      "file": "train.parquet"
+    }
+  }
+}

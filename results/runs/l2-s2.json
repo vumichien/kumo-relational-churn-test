@@ -1,0 +1,377 @@
+{
+  "script": "lgbm-hm-churn.py",
+  "args": {
+    "features": "auto",
+    "seed": 2,
+    "subsample": 0,
+    "trials": 10,
+    "build_only": false,
+    "run_id": null
+  },
+  "run_id": "l2-s2",
+  "stages": {
+    "load_features": {
+      "seconds": 3.14,
+      "peak_rss_mb": 3959.7,
+      "rows": {
+        "train": 3832692,
+        "val": 76556,
+        "test": 74575
+      }
+    },
+    "materialize": {
+      "seconds": 25.35,
+      "peak_rss_mb": 4530.3,
+      "train_rows": 3832692,
+      "train_cols": 27
+    },
+    "tune": {
+      "seconds": 105.06,
+      "peak_rss_mb": 5961.2
+    },
+    "predict": {
+      "seconds": 0.06,
+      "peak_rss_mb": 5961.2
+    }
+  },
+  "lag_columns": 20,
+  "customer_columns": [
+    "customer_id",
+    "FN",
+    "Active",
+    "club_member_status",
+    "fashion_news_frequency",
+    "age",
+    "postal_code"
+  ],
+  "stypes_dropped_unsupported": {
+    "postal_code": "text_embedded"
+  },
+  "stype_source": "torch_frame 0.3.0 infer_df_stype on 100,000 train rows",
+  "train_subsample": 0,
+  "stypes": {
+    "timestamp": "timestamp",
+    "customer_id": "numerical",
+    "churn": "categorical",
+    "churn_lag_1": "categorical",
+    "churn_lag_2": "categorical",
+    "churn_lag_3": "categorical",
+    "churn_lag_4": "categorical",
+    "churn_lag_5": "categorical",
+    "churn_lag_6": "categorical",
+    "churn_lag_7": "categorical",
+    "churn_lag_8": "categorical",
+    "churn_lag_9": "categorical",
+    "churn_lag_10": "categorical",
+    "churn_lag_11": "categorical",
+    "churn_lag_12": "categorical",
+    "churn_lag_13": "categorical",
+    "churn_lag_14": "categorical",
+    "churn_lag_15": "categorical",
+    "churn_lag_16": "categorical",
+    "churn_lag_17": "categorical",
+    "churn_lag_18": "categorical",
+    "churn_lag_19": "categorical",
+    "churn_lag_20": "categorical",
+    "FN": "categorical",
+    "Active": "categorical",
+    "club_member_status": "categorical",
+    "fashion_news_frequency": "categorical",
+    "age": "numerical"
+  },
+  "stypes_missing_from_frames": [],
+  "num_input_columns": 27,
+  "train_rows": 3832692,
+  "train_churn_rate": 0.8187,
+  "engine": "torch_frame 0.3.0 LightGBM, lightgbm 4.7.0, optuna 5.0.0",
+  "best_params": {
+    "verbosity": -1,
+    "bagging_freq": 1,
+    "max_depth": 4,
+    "learning_rate": 0.01561315308585793,
+    "num_leaves": 233,
+    "subsample": 0.15159840009448383,
+    "colsample_bytree": 0.2592908967170317,
+    "lambda_l1": 3.1496540168317234e-06,
+    "lambda_l2": 4.7629370958981e-05,
+    "min_data_in_leaf": 21,
+    "objective": "binary",
+    "metric": "auc"
+  },
+  "final_best_iteration": 191,
+  "tuning_trials": [
+    {
+      "params": {
+        "bagging_freq": 1,
+        "colsample_bytree": 0.44934941198311457,
+        "lambda_l1": 2.01070431551408e-06,
+        "lambda_l2": 1.1129773863956819e-07,
+        "learning_rate": 0.0011268145953419496,
+        "max_depth": 6,
+        "metric": "auc",
+        "min_data_in_leaf": 62,
+        "num_leaves": 564,
+        "num_threads": 10,
+        "objective": "binary",
+        "seed": 2,
+        "subsample": 0.463556272987363,
+        "verbosity": -1
+      },
+      "best_iteration": 187,
+      "val_auc": 0.698515819756955,
+      "seconds": 14.9
+    },
+    {
+      "params": {
+        "bagging_freq": 1,
+        "colsample_bytree": 0.17785094807768687,
+        "lambda_l1": 0.00013670399695207548,
+        "lambda_l2": 6.988736341000159e-08,
+        "learning_rate": 0.003417075308021128,
+        "max_depth": 5,
+        "metric": "auc",
+        "min_data_in_leaf": 79,
+        "num_leaves": 637,
+        "num_threads": 10,
+        "objective": "binary",
+        "seed": 2,
+        "subsample": 0.5526849895631871,
+        "verbosity": -1
+      },
+      "best_iteration": 110,
+      "val_auc": 0.6980452072995298,
+      "seconds": 7.7
+    },
+    {
+      "params": {
+        "bagging_freq": 1,
+        "colsample_bytree": 0.5299837856156188,
+        "lambda_l1": 4.496401084278461e-09,
+        "lambda_l2": 1.910835389350267e-05,
+        "learning_rate": 0.0097380875505427,
+        "max_depth": 10,
+        "metric": "auc",
+        "min_data_in_leaf": 10,
+        "num_leaves": 868,
+        "num_threads": 10,
+        "objective": "binary",
+        "seed": 2,
+        "subsample": 0.12566320315860796,
+        "verbosity": -1
+      },
+      "best_iteration": 95,
+      "val_auc": 0.6985298310262454,
+      "seconds": 8.9
+    },
+    {
+      "params": {
+        "bagging_freq": 1,
+        "colsample_bytree": 0.2592908967170317,
+        "lambda_l1": 3.1496540168317234e-06,
+        "lambda_l2": 4.7629370958981e-05,
+        "learning_rate": 0.01561315308585793,
+        "max_depth": 4,
+        "metric": "auc",
+        "min_data_in_leaf": 21,
+        "num_leaves": 233,
+        "num_threads": 10,
+        "objective": "binary",
+        "seed": 2,
+        "subsample": 0.15159840009448383,
+        "verbosity": -1
+      },
+      "best_iteration": 191,
+      "val_auc": 0.6985888119154046,
+      "seconds": 8.3
+    },
+    {
+      "params": {
+        "bagging_freq": 1,
+        "colsample_bytree": 0.8039555817194982,
+        "lambda_l1": 0.0006310180595160048,
+        "lambda_l2": 4.1974543830306694e-08,
+        "learning_rate": 0.00924995608951029,
+        "max_depth": 8,
+        "metric": "auc",
+        "min_data_in_leaf": 71,
+        "num_leaves": 518,
+        "num_threads": 10,
+        "objective": "binary",
+        "seed": 2,
+        "subsample": 0.4175480185626313,
+        "verbosity": -1
+      },
+      "best_iteration": 85,
+      "val_auc": 0.6985560200840716,
+      "seconds": 10.4
+    },
+    {
+      "params": {
+        "bagging_freq": 1,
+        "colsample_bytree": 0.5887869212463238,
+        "lambda_l1": 1.885643693512631e-05,
+        "lambda_l2": 2.3306262319394264e-05,
+        "learning_rate": 0.010000385053531147,
+        "max_depth": 11,
+        "metric": "auc",
+        "min_data_in_leaf": 78,
+        "num_leaves": 911,
+        "num_threads": 10,
+        "objective": "binary",
+        "seed": 2,
+        "subsample": 0.37453297003755415,
+        "verbosity": -1
+      },
+      "best_iteration": 37,
+      "val_auc": 0.6985492805003799,
+      "seconds": 8.4
+    },
+    {
+      "params": {
+        "bagging_freq": 1,
+        "colsample_bytree": 0.3980252815912694,
+        "lambda_l1": 0.3224816743524901,
+        "lambda_l2": 1.1554480672990355e-05,
+        "learning_rate": 0.08081360003631316,
+        "max_depth": 7,
+        "metric": "auc",
+        "min_data_in_leaf": 3,
+        "num_leaves": 558,
+        "num_threads": 10,
+        "objective": "binary",
+        "seed": 2,
+        "subsample": 0.12799017616127356,
+        "verbosity": -1
+      },
+      "best_iteration": 24,
+      "val_auc": 0.6985795362970176,
+      "seconds": 3.4
+    },
+    {
+      "params": {
+        "bagging_freq": 1,
+        "colsample_bytree": 0.8102454335759575,
+        "lambda_l1": 0.0010427284283418714,
+        "lambda_l2": 0.044627093679379476,
+        "learning_rate": 0.0013623501423971258,
+        "max_depth": 5,
+        "metric": "auc",
+        "min_data_in_leaf": 17,
+        "num_leaves": 1018,
+        "num_threads": 10,
+        "objective": "binary",
+        "seed": 2,
+        "subsample": 0.9720512977083149,
+        "verbosity": -1
+      },
+      "best_iteration": 174,
+      "val_auc": 0.6975022502892428,
+      "seconds": 11.3
+    },
+    {
+      "params": {
+        "bagging_freq": 1,
+        "colsample_bytree": 0.983995773089352,
+        "lambda_l1": 2.5914879486117532e-05,
+        "lambda_l2": 0.00010964892893556912,
+        "learning_rate": 0.011172072635153279,
+        "max_depth": 5,
+        "metric": "auc",
+        "min_data_in_leaf": 33,
+        "num_leaves": 366,
+        "num_threads": 10,
+        "objective": "binary",
+        "seed": 2,
+        "subsample": 0.09339501698313005,
+        "verbosity": -1
+      },
+      "best_iteration": 209,
+      "val_auc": 0.6985217025948995,
+      "seconds": 9.5
+    },
+    {
+      "params": {
+        "bagging_freq": 1,
+        "colsample_bytree": 0.41025003859455555,
+        "lambda_l1": 1.3495014854732609e-09,
+        "lambda_l2": 0.09419967194117411,
+        "learning_rate": 0.0059399087133854,
+        "max_depth": 5,
+        "metric": "auc",
+        "min_data_in_leaf": 27,
+        "num_leaves": 853,
+        "num_threads": 10,
+        "objective": "binary",
+        "seed": 2,
+        "subsample": 0.7499097034727573,
+        "verbosity": -1
+      },
+      "best_iteration": 199,
+      "val_auc": 0.6985411066525382,
+      "seconds": 13.7
+    },
+    {
+      "params": {
+        "bagging_freq": 1,
+        "colsample_bytree": 0.2592908967170317,
+        "lambda_l1": 3.1496540168317234e-06,
+        "lambda_l2": 4.7629370958981e-05,
+        "learning_rate": 0.01561315308585793,
+        "max_depth": 4,
+        "metric": "auc",
+        "min_data_in_leaf": 21,
+        "num_leaves": 233,
+        "num_threads": 10,
+        "objective": "binary",
+        "seed": 2,
+        "subsample": 0.15159840009448383,
+        "verbosity": -1
+      },
+      "best_iteration": 191,
+      "val_auc": 0.6985888119154046,
+      "seconds": 8.1
+    }
+  ],
+  "feature_stypes_used_by_lightgbm": {
+    "timestamp": [
+      "timestamp"
+    ],
+    "numerical": [
+      "age",
+      "customer_id"
+    ],
+    "categorical": [
+      "Active",
+      "FN",
+      "churn_lag_1",
+      "churn_lag_10",
+      "churn_lag_11",
+      "churn_lag_12",
+      "churn_lag_13",
+      "churn_lag_14",
+      "churn_lag_15",
+      "churn_lag_16",
+      "churn_lag_17",
+      "churn_lag_18",
+      "churn_lag_19",
+      "churn_lag_2",
+      "churn_lag_20",
+      "churn_lag_3",
+      "churn_lag_4",
+      "churn_lag_5",
+      "churn_lag_6",
+      "churn_lag_7",
+      "churn_lag_8",
+      "churn_lag_9",
+      "club_member_status",
+      "fashion_news_frequency"
+    ]
+  },
+  "val_auroc": 0.6985888119154047,
+  "test_auroc": 0.6943924207753771,
+  "value": 0.6943924207753771,
+  "seconds_to_preds_written": 134.2,
+  "peak_rss_mb": 5961.2,
+  "mem_available_start_gib": 39.01,
+  "mem_available_min_gib": 33.47
+}

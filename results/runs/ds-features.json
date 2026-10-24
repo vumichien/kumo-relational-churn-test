@@ -1,0 +1,52 @@
+{
+  "script": "lgbm-hm-churn.py",
+  "args": {
+    "features": "ds",
+    "seed": 0,
+    "subsample": 0,
+    "trials": 10,
+    "build_only": true,
+    "run_id": null
+  },
+  "run_id": "l1-s0",
+  "stages": {
+    "load_tables": {
+      "seconds": 1.69,
+      "peak_rss_mb": 3735.3,
+      "label_rows": {
+        "train": 3832692,
+        "val": 76556,
+        "test": 74575
+      },
+      "transactions_rows_upto_test": 15187287
+    },
+    "features_val": {
+      "seconds": 8.71,
+      "peak_rss_mb": 10565.9,
+      "rows": 76556,
+      "columns": 74,
+      "file": "val.parquet"
+    },
+    "features_test": {
+      "seconds": 8.77,
+      "peak_rss_mb": 10565.9,
+      "rows": 74575,
+      "columns": 73,
+      "file": "test.parquet"
+    },
+    "features_train": {
+      "seconds": 40.39,
+      "peak_rss_mb": 11072.6,
+      "rows": 3832692,
+      "columns": 74,
+      "file": "train.parquet"
+    }
+  },
+  "sql_lines": 124,
+  "duckdb": "2.0.0",
+  "train_file": "train.parquet",
+  "total_seconds": 60.31,
+  "peak_rss_mb": 11072.6,
+  "mem_available_start_gib": 38.19,
+  "mem_available_min_gib": 26.53
+}

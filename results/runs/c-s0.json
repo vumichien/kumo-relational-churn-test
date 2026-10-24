@@ -1,0 +1,135 @@
+{
+  "script": "cooccurrence-test.py",
+  "seed": 0,
+  "num_customers": 4000,
+  "num_context": 2000,
+  "num_query": 2000,
+  "num_orders": 31903,
+  "churn_rate": 0.4938,
+  "auroc": {
+    "c1": 1.0,
+    "c2": 0.6532660175766327,
+    "c3": 0.4987049533783216,
+    "c4": 0.49658187694757017,
+    "c5": 1.0
+  },
+  "rows": {
+    "c1": "Kumo Relational, every order visible (num_neighbors [16])",
+    "c2": "Kumo Relational, one sampled order per customer (num_neighbors [1])",
+    "c3": "LightGBM (300 trees, lr 0.05) on per-column summaries",
+    "c4": "Kumo Tabular large, 8 estimators, on per-column summaries",
+    "c5": "C3 plus the number of orders both late and refunded"
+  },
+  "summary_columns": [
+    "age",
+    "num_orders",
+    "late_sum",
+    "late_mean",
+    "late_min",
+    "late_max",
+    "late_std",
+    "refunded_sum",
+    "refunded_mean",
+    "refunded_min",
+    "refunded_max",
+    "refunded_std"
+  ],
+  "fairness": {
+    "churn_0": {
+      "customers": 2025,
+      "mean_orders": 7.958,
+      "mean_late_orders": 2.401,
+      "mean_refunded_orders": 2.3802,
+      "mean_late_and_refunded_orders": 0.0,
+      "distribution_orders": {
+        "4": 234,
+        "5": 206,
+        "6": 229,
+        "7": 217,
+        "8": 267,
+        "9": 226,
+        "10": 219,
+        "11": 228,
+        "12": 199
+      },
+      "distribution_late_orders": {
+        "1": 617,
+        "2": 612,
+        "3": 373,
+        "4": 249,
+        "5": 138,
+        "6": 36
+      },
+      "distribution_refunded_orders": {
+        "1": 627,
+        "2": 611,
+        "3": 374,
+        "4": 246,
+        "5": 137,
+        "6": 30
+      }
+    },
+    "churn_1": {
+      "customers": 1975,
+      "mean_orders": 7.9939,
+      "mean_late_orders": 2.4162,
+      "mean_refunded_orders": 2.3909,
+      "mean_late_and_refunded_orders": 1.0,
+      "distribution_orders": {
+        "4": 222,
+        "5": 203,
+        "6": 219,
+        "7": 242,
+        "8": 213,
+        "9": 219,
+        "10": 230,
+        "11": 222,
+        "12": 205
+      },
+      "distribution_late_orders": {
+        "1": 573,
+        "2": 608,
+        "3": 396,
+        "4": 228,
+        "5": 137,
+        "6": 33
+      },
+      "distribution_refunded_orders": {
+        "1": 599,
+        "2": 591,
+        "3": 394,
+        "4": 228,
+        "5": 131,
+        "6": 32
+      }
+    }
+  },
+  "seconds_per_row": {
+    "c1": 3.11,
+    "c2": 0.56,
+    "c3": 0.11,
+    "c5": 0.03,
+    "c4": 1.47
+  },
+  "seconds_to_preds_written": 5.34,
+  "device": "cuda",
+  "gpu": "NVIDIA GB10",
+  "torch": "2.14.0+cu130",
+  "lightgbm": "4.7.0",
+  "sampler_check_c2": {
+    "orders_sampled_per_customer": [
+      1
+    ],
+    "same_torch_seed_same_orders": true,
+    "different_torch_seed_different_orders": true,
+    "share_sampled_order_is_first_in_table": 0.131,
+    "share_expected_if_uniform": 0.1412,
+    "note": "pyg-lib hetero_neighbor_sample, replace=False, no node times (seed_time = int64 max)"
+  },
+  "seconds_total": 5.39,
+  "peak_gpu_mb": 2121.0,
+  "peak_rss_mb": 3132.0,
+  "mem_available_start_gib": 38.2,
+  "mem_available_min_gib": 33.06,
+  "value": 1.0
+}

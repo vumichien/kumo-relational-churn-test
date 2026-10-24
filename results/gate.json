@@ -1,0 +1,10 @@
+{
+  "run": "k1-s0",
+  "auroc": 0.6992494463920593,
+  "auroc_sklearn_from_preds": 0.6992494246786757,
+  "target": 0.6992,
+  "tolerance": 0.005,
+  "agreement_tolerance": 0.0001,
+  "passed": true,
+  "time": "2026-10-24 20:21:20 JST"
+}

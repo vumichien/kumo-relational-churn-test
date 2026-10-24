@@ -1,0 +1,28 @@
+{
+  "churn_rate": {
+    "train": 0.8187,
+    "val": 0.8128,
+    "test": 0.8261
+  },
+  "label_rows": {
+    "train": 3832692,
+    "val": 76556,
+    "test": 74575
+  },
+  "context_rows_k1": 160000,
+  "labelled_rows_available_train_val": 3909248,
+  "context_share_k1": 0.0409,
+  "test_rows_with_at_least_one_past_label_share": 0.8961,
+  "test_rows_past_labels_median": 6.0,
+  "test_rows_past_labels_mean": 7.22,
+  "test_customers_distinct": 74575,
+  "num_lags": 20,
+  "tables": {
+    "transactions": 15453651,
+    "article": 105542,
+    "customer": 1371980
+  },
+  "tables_note": "full tables (upto_test_timestamp=False), as Kumo Relational reads them",
+  "transactions_up_to_test_timestamp": 15187287,
+  "transactions_up_to_test_note": "what the data scientist's SQL sees (dataset.get_db())"
+}

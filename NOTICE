@@ -1,0 +1,8 @@
+experiments/nvidia-relbench-example.py is copied from NVIDIA/structured-data-models
+(examples/relational/relbench/main.py, commit f8d054cbc589c9ecd2c35634434f76c6e4aae79a)
+and modified as listed in its header.
+
+Copyright (c) 2026, NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+Licensed under the Apache License, Version 2.0: https://www.apache.org/licenses/LICENSE-2.0
+
+The rest of this repository is under the MIT License in LICENSE.

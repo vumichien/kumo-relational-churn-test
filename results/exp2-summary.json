@@ -1,0 +1,342 @@
+{
+  "design": "synthetic shop, 4,000 customers per data seed (2,000 context, 2,000 predicted), 4-12 orders each; churn iff one order was both late and refunded",
+  "rows": {
+    "c1": {
+      "label": "Kumo Relational, sees every order",
+      "role": "kumo_relational",
+      "seeds": {
+        "s0": 1.0,
+        "s1": 1.0,
+        "s2": 1.0
+      },
+      "test_auroc": {
+        "mean": 1.0,
+        "min": 1.0,
+        "max": 1.0,
+        "n": 3
+      }
+    },
+    "c2": {
+      "label": "Kumo Relational, sees one sampled order",
+      "role": "kumo_relational",
+      "seeds": {
+        "s0": 0.653266,
+        "s1": 0.670857,
+        "s2": 0.685464
+      },
+      "test_auroc": {
+        "mean": 0.6699,
+        "min": 0.6533,
+        "max": 0.6855,
+        "n": 3
+      }
+    },
+    "c3": {
+      "label": "LightGBM on per-column summaries",
+      "role": "flat_table",
+      "seeds": {
+        "s0": 0.498705,
+        "s1": 0.507217,
+        "s2": 0.503012
+      },
+      "test_auroc": {
+        "mean": 0.503,
+        "min": 0.4987,
+        "max": 0.5072,
+        "n": 3
+      }
+    },
+    "c4": {
+      "label": "Kumo Tabular on per-column summaries",
+      "role": "kumo_tabular",
+      "seeds": {
+        "s0": 0.496582,
+        "s1": 0.50173,
+        "s2": 0.512499
+      },
+      "test_auroc": {
+        "mean": 0.5036,
+        "min": 0.4966,
+        "max": 0.5125,
+        "n": 3
+      }
+    },
+    "c5": {
+      "label": "LightGBM on summaries plus one hand-made feature",
+      "role": "flat_table",
+      "seeds": {
+        "s0": 1.0,
+        "s1": 1.0,
+        "s2": 1.0
+      },
+      "test_auroc": {
+        "mean": 1.0,
+        "min": 1.0,
+        "max": 1.0,
+        "n": 3
+      }
+    }
+  },
+  "fairness": {
+    "s0": {
+      "churn_0": {
+        "customers": 2025,
+        "mean_orders": 7.958,
+        "mean_late_orders": 2.401,
+        "mean_refunded_orders": 2.3802,
+        "mean_late_and_refunded_orders": 0.0,
+        "distribution_orders": {
+          "4": 234,
+          "5": 206,
+          "6": 229,
+          "7": 217,
+          "8": 267,
+          "9": 226,
+          "10": 219,
+          "11": 228,
+          "12": 199
+        },
+        "distribution_late_orders": {
+          "1": 617,
+          "2": 612,
+          "3": 373,
+          "4": 249,
+          "5": 138,
+          "6": 36
+        },
+        "distribution_refunded_orders": {
+          "1": 627,
+          "2": 611,
+          "3": 374,
+          "4": 246,
+          "5": 137,
+          "6": 30
+        }
+      },
+      "churn_1": {
+        "customers": 1975,
+        "mean_orders": 7.9939,
+        "mean_late_orders": 2.4162,
+        "mean_refunded_orders": 2.3909,
+        "mean_late_and_refunded_orders": 1.0,
+        "distribution_orders": {
+          "4": 222,
+          "5": 203,
+          "6": 219,
+          "7": 242,
+          "8": 213,
+          "9": 219,
+          "10": 230,
+          "11": 222,
+          "12": 205
+        },
+        "distribution_late_orders": {
+          "1": 573,
+          "2": 608,
+          "3": 396,
+          "4": 228,
+          "5": 137,
+          "6": 33
+        },
+        "distribution_refunded_orders": {
+          "1": 599,
+          "2": 591,
+          "3": 394,
+          "4": 228,
+          "5": 131,
+          "6": 32
+        }
+      }
+    },
+    "s1": {
+      "churn_0": {
+        "customers": 2035,
+        "mean_orders": 7.9538,
+        "mean_late_orders": 2.3681,
+        "mean_refunded_orders": 2.4025,
+        "mean_late_and_refunded_orders": 0.0,
+        "distribution_orders": {
+          "4": 218,
+          "5": 229,
+          "6": 224,
+          "7": 251,
+          "8": 233,
+          "9": 222,
+          "10": 236,
+          "11": 218,
+          "12": 204
+        },
+        "distribution_late_orders": {
+          "1": 617,
+          "2": 631,
+          "3": 390,
+          "4": 235,
+          "5": 142,
+          "6": 20
+        },
+        "distribution_refunded_orders": {
+          "1": 623,
+          "2": 601,
+          "3": 400,
+          "4": 236,
+          "5": 130,
+          "6": 45
+        }
+      },
+      "churn_1": {
+        "customers": 1965,
+        "mean_orders": 8.1389,
+        "mean_late_orders": 2.4463,
+        "mean_refunded_orders": 2.4336,
+        "mean_late_and_refunded_orders": 1.0,
+        "distribution_orders": {
+          "4": 206,
+          "5": 198,
+          "6": 198,
+          "7": 215,
+          "8": 248,
+          "9": 202,
+          "10": 237,
+          "11": 218,
+          "12": 243
+        },
+        "distribution_late_orders": {
+          "1": 579,
+          "2": 566,
+          "3": 400,
+          "4": 244,
+          "5": 136,
+          "6": 40
+        },
+        "distribution_refunded_orders": {
+          "1": 584,
+          "2": 599,
+          "3": 371,
+          "4": 221,
+          "5": 137,
+          "6": 53
+        }
+      }
+    },
+    "s2": {
+      "churn_0": {
+        "customers": 2084,
+        "mean_orders": 8.1036,
+        "mean_late_orders": 2.3949,
+        "mean_refunded_orders": 2.4698,
+        "mean_late_and_refunded_orders": 0.0,
+        "distribution_orders": {
+          "4": 217,
+          "5": 201,
+          "6": 233,
+          "7": 245,
+          "8": 224,
+          "9": 243,
+          "10": 253,
+          "11": 223,
+          "12": 245
+        },
+        "distribution_late_orders": {
+          "1": 624,
+          "2": 626,
+          "3": 434,
+          "4": 233,
+          "5": 121,
+          "6": 46
+        },
+        "distribution_refunded_orders": {
+          "1": 588,
+          "2": 624,
+          "3": 412,
+          "4": 263,
+          "5": 159,
+          "6": 38
+        }
+      },
+      "churn_1": {
+        "customers": 1916,
+        "mean_orders": 7.9661,
+        "mean_late_orders": 2.4207,
+        "mean_refunded_orders": 2.3591,
+        "mean_late_and_refunded_orders": 1.0,
+        "distribution_orders": {
+          "4": 214,
+          "5": 234,
+          "6": 210,
+          "7": 207,
+          "8": 206,
+          "9": 217,
+          "10": 200,
+          "11": 209,
+          "12": 219
+        },
+        "distribution_late_orders": {
+          "1": 569,
+          "2": 569,
+          "3": 384,
+          "4": 233,
+          "5": 119,
+          "6": 42
+        },
+        "distribution_refunded_orders": {
+          "1": 590,
+          "2": 582,
+          "3": 376,
+          "4": 231,
+          "5": 108,
+          "6": 29
+        }
+      }
+    }
+  },
+  "churn_rate": {
+    "s0": 0.4938,
+    "s1": 0.4913,
+    "s2": 0.479
+  },
+  "num_orders": {
+    "s0": 31903,
+    "s1": 32179,
+    "s2": 32151
+  },
+  "sampler_check_c2": {
+    "s0": {
+      "orders_sampled_per_customer": [
+        1
+      ],
+      "same_torch_seed_same_orders": true,
+      "different_torch_seed_different_orders": true,
+      "share_sampled_order_is_first_in_table": 0.131,
+      "share_expected_if_uniform": 0.1412,
+      "note": "pyg-lib hetero_neighbor_sample, replace=False, no node times (seed_time = int64 max)"
+    },
+    "s1": {
+      "orders_sampled_per_customer": [
+        1
+      ],
+      "same_torch_seed_same_orders": true,
+      "different_torch_seed_different_orders": true,
+      "share_sampled_order_is_first_in_table": 0.1325,
+      "share_expected_if_uniform": 0.1399,
+      "note": "pyg-lib hetero_neighbor_sample, replace=False, no node times (seed_time = int64 max)"
+    },
+    "s2": {
+      "orders_sampled_per_customer": [
+        1
+      ],
+      "same_torch_seed_same_orders": true,
+      "different_torch_seed_different_orders": true,
+      "share_sampled_order_is_first_in_table": 0.1333,
+      "share_expected_if_uniform": 0.1403,
+      "note": "pyg-lib hetero_neighbor_sample, replace=False, no node times (seed_time = int64 max)"
+    }
+  },
+  "seconds_per_row_seed0": {
+    "c1": 3.11,
+    "c2": 0.56,
+    "c3": 0.11,
+    "c5": 0.03,
+    "c4": 1.47
+  },
+  "agreement_failures": []
+}

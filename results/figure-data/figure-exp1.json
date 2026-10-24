@@ -1,0 +1,90 @@
+{
+  "title": "H&M churn: test AUROC (mean of three seeds, bars show min-max)",
+  "chance_level": 0.5,
+  "bars": [
+    {
+      "id": "K1",
+      "label": "Kumo Relational, NVIDIA's settings",
+      "role": "kumo_relational",
+      "colour": "BLUE #1971c2",
+      "mean": 0.6988,
+      "min": 0.6983,
+      "max": 0.6992,
+      "n_seeds": 3
+    },
+    {
+      "id": "K2",
+      "label": "Kumo Relational, context from the training weeks only",
+      "role": "kumo_relational",
+      "colour": "BLUE #1971c2",
+      "mean": 0.6998,
+      "min": 0.6994,
+      "max": 0.7003,
+      "n_seeds": 3
+    },
+    {
+      "id": "K3",
+      "label": "Kumo Relational, no past churn labels",
+      "role": "kumo_relational",
+      "colour": "BLUE #1971c2",
+      "mean": 0.5904,
+      "min": 0.5902,
+      "max": 0.5904,
+      "n_seeds": 3
+    },
+    {
+      "id": "K4",
+      "label": "Kumo Relational, no related tables",
+      "role": "kumo_relational",
+      "colour": "BLUE #1971c2",
+      "mean": 0.6939,
+      "min": 0.6937,
+      "max": 0.6941,
+      "n_seeds": 3
+    },
+    {
+      "id": "K5",
+      "label": "Kumo Relational, the library's defaults",
+      "role": "kumo_relational",
+      "colour": "BLUE #1971c2",
+      "mean": 0.6965,
+      "min": 0.6959,
+      "max": 0.6972,
+      "n_seeds": 3
+    },
+    {
+      "id": "T1",
+      "label": "Kumo Tabular on the hand-built features",
+      "role": "kumo_tabular",
+      "colour": "BLUE #1971c2, hollow",
+      "mean": 0.6927,
+      "min": 0.6925,
+      "max": 0.693,
+      "n_seeds": 3
+    },
+    {
+      "id": "L1",
+      "label": "LightGBM on the hand-built features (tuned)",
+      "role": "flat_table",
+      "colour": "ORANGE #e8590c",
+      "mean": 0.6935,
+      "min": 0.6926,
+      "max": 0.6941,
+      "n_seeds": 3
+    },
+    {
+      "id": "L2",
+      "label": "LightGBM on the customer table and past labels (tuned)",
+      "role": "flat_table",
+      "colour": "ORANGE #e8590c",
+      "mean": 0.6945,
+      "min": 0.6944,
+      "max": 0.6946,
+      "n_seeds": 3
+    }
+  ],
+  "reference_lines": {
+    "NVIDIA README, same settings": 0.6992,
+    "RelBench user study data scientist (KumoRFM whitepaper Table 2)": 0.69
+  }
+}

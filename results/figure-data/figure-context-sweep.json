@@ -1,0 +1,30 @@
+{
+  "title": "More labelled examples in the context: H&M churn test AUROC",
+  "x_label": "labelled rows per estimator (8 estimators)",
+  "points": [
+    {
+      "rows_per_estimator": 1000,
+      "total_context_rows": 8000,
+      "share_of_labelled_rows": 0.00205,
+      "mean": 0.6959,
+      "min": 0.6956,
+      "max": 0.6962
+    },
+    {
+      "rows_per_estimator": 5000,
+      "total_context_rows": 40000,
+      "share_of_labelled_rows": 0.01023,
+      "mean": 0.697,
+      "min": 0.6968,
+      "max": 0.6972
+    },
+    {
+      "rows_per_estimator": 20000,
+      "total_context_rows": 160000,
+      "share_of_labelled_rows": 0.04093,
+      "mean": 0.6988,
+      "min": 0.6983,
+      "max": 0.6992
+    }
+  ]
+}

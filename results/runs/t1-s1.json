@@ -1,0 +1,39 @@
+{
+  "script": "kumo-tabular-hm-churn.py",
+  "run_id": "t1-s1",
+  "args": {
+    "seed": 1,
+    "context_size": 20000,
+    "num_estimators": 8,
+    "batch_size": 10000,
+    "run_id": null
+  },
+  "context_form": "per_estimator_blocks",
+  "context_rows": 160000,
+  "context_newest_timestamp": "2020-09-07 00:00:00",
+  "context_oldest_timestamp": "2020-08-24 00:00:00",
+  "context_churn_rate": 0.8135,
+  "train_file": "train.parquet",
+  "num_features": 71,
+  "feature_stypes": {
+    "numerical": 46,
+    "categorical": 25
+  },
+  "num_query_rows": 74575,
+  "value": 0.6929520804035046,
+  "test_auroc": 0.6929520804035046,
+  "seconds": {
+    "load_data": 1.5,
+    "load_model": 0.78,
+    "fit": 25.98,
+    "predict": 74.74,
+    "total": 103.04
+  },
+  "device": "cuda",
+  "gpu": "NVIDIA GB10",
+  "torch": "2.14.0+cu130",
+  "peak_gpu_mb": 6696.5,
+  "peak_rss_mb": 11764.0,
+  "mem_available_start_gib": 39.07,
+  "mem_available_min_gib": 16.64
+}

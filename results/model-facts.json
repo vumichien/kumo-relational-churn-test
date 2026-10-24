@@ -1,0 +1,76 @@
+{
+  "time": "2026-10-24 20:20:21 JST",
+  "kumo_relational": {
+    "revision": "v1.0.1",
+    "commit": "2bd603d3d8f25f67a7aaa8579908595e20567e22",
+    "parameters_per_head": {
+      "classification": 29915010,
+      "regression": 30908383
+    },
+    "parameters_total": 60823393,
+    "checkpoint_files_bytes": {
+      ".gitattributes": 1519,
+      "LICENSE": 2693,
+      "README.md": 1294,
+      "THIRD-PARTY-NOTICES.txt": 1883,
+      "classifier.pt": 119862733,
+      "config.json": 139,
+      "regressor.pt": 123786699
+    },
+    "config_json": {
+      "model_type": "kumo_relational",
+      "checkpoint_files": {
+        "classification": "classifier.pt",
+        "regression": "regressor.pt"
+      }
+    },
+    "_KumoRelational_defaults": {
+      "channels": 128,
+      "num_embedding_layers": 3,
+      "num_embedding_heads": 8,
+      "num_inducing_points": 128,
+      "group_size": 3,
+      "num_readout_tokens": 4,
+      "num_icl_layers": 12,
+      "num_icl_heads": 8,
+      "norm_bias": true,
+      "max_train_size": 20000,
+      "device": null,
+      "dtype": null
+    },
+    "default_recipe": "Recipe(\n  features=Sequential(\n    TableDispatch(\n      related=StypeDispatch(\n        datetime=AddCalendarFields(\n          fields=[\n            'minute',\n            'hour',\n            'weekday',\n            'day_of_month',\n            'month',\n          ],\n          encoding='raw',\n        ),\n      ),\n    ),\n    StypeDispatch(\n      categorical=Sequential(\n        AlignCategories(sort_by='value'),\n        ToNumerical(),\n      ),\n    ),\n    StypeDispatch(\n      numerical=Sequential(\n        ImputeMean(),\n        DropConstantColumns(),\n        Standardize(eps=1e-06),\n        Clip(-100.0, 100.0),\n        Choice(\n          Identity(),\n          PowerTransform(),\n          method='round_robin',\n        ),\n        ClipSigma(threshold=4.0),\n        ShuffleColumns(method='latin'),\n      ),\n    ),\n  ),\n  target=Sequential(\n    StypeDispatch(\n      numerical=Standardize(eps=0.0),\n      categorical=Sequential(\n        AlignCategories(sort_by='value'),\n        ShuffleCategories(method='shift'),\n      ),\n    ),\n  ),\n  output=Sequential(\n    TaskDispatch(\n      regression=SortQuantiles(),\n    ),\n    AverageEstimators(),\n    TaskDispatch(\n      classification=Softmax(temperature=0.9),\n    ),\n  ),\n)"
+  },
+  "kumo_tabular_large": {
+    "revision": "v1.0.1",
+    "snapshots": [
+      "3c3e10bbdb590ace29e7026847f92db3c603096d"
+    ],
+    "parameters_per_head": {
+      "classification": 213668250,
+      "regression": 215683191
+    },
+    "parameters_total": 429351441,
+    "checkpoint_files_bytes": {
+      "3c3e10bbdb590ace29e7026847f92db3c603096d": {
+        "config.json": 423,
+        "classifier.pt": 854850034,
+        "regressor.pt": 862909259
+      }
+    },
+    "model_kwargs": {
+      "cell_channels": 256,
+      "num_embedding_layers": 6,
+      "num_embedding_heads": 4,
+      "num_inducing_points": 256,
+      "group_size": 3,
+      "num_frequencies": 32,
+      "num_readout_tokens": 4,
+      "icl_channels": 1024,
+      "num_icl_layers": 24,
+      "num_icl_heads": 16,
+      "num_icl_key_value_heads_for_query": 2
+    },
+    "default_recipe": "Recipe(\n  features=Sequential(\n    StypeDispatch(\n      numerical=Sequential(\n        Cast(torch.float64),\n        DropConstantColumns(),\n        Standardize(eps=1e-06),\n        Clip(-100.0, 100.0),\n        Choice(\n          Identity(),\n          PowerTransform(),\n          Sequential(\n            RobustScale(quantile_range=(25.0, 75.0)),\n            ClipSoft(3.0),\n          ),\n          RankGaussian(max_knots=8192),\n          method='round_robin',\n        ),\n        ClipSigma(threshold=4.0),\n        FlipSign(probability=0.5),\n      ),\n      categorical=Sequential(\n        AlignCategories(sort_by='value'),\n        AddCategoryCounts(min_cardinality=50),\n        ToNumerical(),\n        Cast(torch.float64),\n        DropConstantColumns(),\n        Standardize(eps=1e-06),\n        Clip(-100.0, 100.0),\n        Choice(\n          Identity(),\n          PowerTransform(),\n          Sequential(\n            RobustScale(quantile_range=(25.0, 75.0)),\n            ClipSoft(3.0),\n          ),\n          RankGaussian(max_knots=8192),\n          method='round_robin',\n        ),\n        ClipSigma(threshold=4.0),\n      ),\n    ),\n    ShuffleColumns(method='latin'),\n    SelectColumns(),\n    Cast(torch.float32),\n  ),\n  target=Sequential(\n    StypeDispatch(\n      numerical=Sequential(\n        Standardize(eps=0.0),\n        FlipSign(probability=0.5),\n      ),\n      categorical=Sequential(\n        AlignCategories(sort_by='value'),\n        ShuffleCategories(method='shift'),\n      ),\n    ),\n  ),\n  output=TaskDispatch(\n    classification=Sequential(\n      AverageEstimators(),\n      Softmax(),\n    ),\n    regression=Sequential(\n      SortQuantiles(),\n      AverageEstimators(trim_fraction=0.2),\n    ),\n  ),\n)"
+  },
+  "task_classification": "classification"
+}
