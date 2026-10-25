@@ -44,6 +44,13 @@ Test AUROC on H&M churn, mean of three seeds (min–max in brackets), from `resu
 
 The first K1 run reproduces NVIDIA's published 0.6992 (`results/gate.json`: 0.69925). The synthetic test is in `results/exp2-summary.json` and the context sweep in `results/context-sweep.json`.
 
+### Details the article leaves here
+
+- **Tuning.** NVIDIA picked K1's settings on the validation week; I didn't retune them. Each LightGBM (L1, L2, L3) got the user study's 10 tuning trials on the validation week (`args.trials` in `results/runs/l*-s*.json`).
+- **K5, the library's defaults** (16 sampled neighbours per hop, 10,000 context rows, one estimator), still scored 0.6965, about 0.002 below NVIDIA's tuned settings.
+- **K2, context from the training weeks only,** scored 0.6998, slightly above K1, which also reads the validation week as examples. I expected the opposite and can't explain it yet.
+- **K7's neighbour search** on the validation week (`results/phase5-k7-tuning.json`): 1 per hop 0.5964, 4 per hop 0.6396, 16 per hop 0.6790; 32 per hop did not fit in the machine's free memory, so the score was still rising at the largest setting tried.
+
 ## Rerun it
 
 The scripts expect the repo at `~/kumo-relational-tds` and write to `results/`, `data/`, `logs/` and `cache/` inside it. They pin themselves to CPUs 5–9 and 15–19 (the GB10's performance cores); change `CPUS` in `run-phase1.py` and the `taskset` line in `run-phase1.sh` for another machine.
