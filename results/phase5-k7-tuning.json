@@ -1,0 +1,35 @@
+{
+  "rule": "best validation AUROC (sklearn from saved predictions) among 1 1, 4 4, 16 16; seed 0; K3 settings otherwise, context from the training weeks only, queries the validation week",
+  "candidates": {
+    "1 1": {
+      "status": "done",
+      "val_auroc_sklearn": 0.5963883602679787,
+      "val_auroc_script": 0.5963883399963379,
+      "run": "k7val-nn1-s0",
+      "peak_rss_mb": 11699.6,
+      "peak_gpu_mb": 2470.4,
+      "wall_s": 118.04
+    },
+    "4 4": {
+      "status": "done",
+      "val_auroc_sklearn": 0.639598865249229,
+      "val_auroc_script": 0.6395988464355469,
+      "run": "k7val-nn4-s0",
+      "peak_rss_mb": 11792.0,
+      "peak_gpu_mb": 5666.5,
+      "wall_s": 154.05
+    },
+    "16 16": {
+      "status": "done",
+      "val_auroc_sklearn": 0.6790257090727496,
+      "val_auroc_script": 0.6790257096290588,
+      "run": "k7val-nn16-s0",
+      "peak_rss_mb": 11818.1,
+      "peak_gpu_mb": 7621.2,
+      "wall_s": 256.1
+    }
+  },
+  "pick": "16 16",
+  "time": "2026-10-25 11:07:38 JST",
+  "k7_runs": "k7-s0, k7-s1, k7-s2"
+}

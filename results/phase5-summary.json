@@ -1,0 +1,254 @@
+{
+  "k6_db_rows": {
+    "s0": {
+      "transactions": 15187287,
+      "article": 105542,
+      "customer": 1371980
+    },
+    "s1": {
+      "transactions": 15187287,
+      "article": 105542,
+      "customer": 1371980
+    },
+    "s2": {
+      "transactions": 15187287,
+      "article": 105542,
+      "customer": 1371980
+    }
+  },
+  "k1_db_rows_full_tables": {
+    "transactions": 15453651,
+    "article": 105542,
+    "customer": 1371980
+  },
+  "k6_tables_smaller_than_k1": {
+    "s0": {
+      "transactions": true,
+      "article": false,
+      "customer": false
+    },
+    "s1": {
+      "transactions": true,
+      "article": false,
+      "customer": false
+    },
+    "s2": {
+      "transactions": true,
+      "article": false,
+      "customer": false
+    }
+  },
+  "k7_tuning": {
+    "rule": "best validation AUROC (sklearn from saved predictions) among 1 1, 4 4, 16 16; seed 0; K3 settings otherwise, context from the training weeks only, queries the validation week",
+    "pick": "16 16",
+    "validation": {
+      "1 1": {
+        "status": "done",
+        "val_auroc": 0.596388,
+        "rows": 76556,
+        "timing": {
+          "status": "done",
+          "wall_s_process": 118.04,
+          "flags": [],
+          "clean_timing": true,
+          "peak_rss_mb": 11699.6,
+          "peak_gpu_mb": 2470.4,
+          "fallback_used": null,
+          "infra_stops": 0,
+          "start": "2026-10-25 10:58:49 JST",
+          "mem_available_min_gib": 22.81,
+          "seconds_to_preds_written": 115.03,
+          "seconds_by_stage": {
+            "load_and_prepare_data": 81.85,
+            "load_model": 1.61,
+            "sample_context_and_fit": 10.13,
+            "sample_queries_and_predict": 21.41,
+            "total": 115.01,
+            "to_preds_written": 115.03
+          }
+        }
+      },
+      "4 4": {
+        "status": "done",
+        "val_auroc": 0.639599,
+        "rows": 76556,
+        "timing": {
+          "status": "done",
+          "wall_s_process": 154.05,
+          "flags": [],
+          "clean_timing": true,
+          "peak_rss_mb": 11792.0,
+          "peak_gpu_mb": 5666.5,
+          "fallback_used": null,
+          "infra_stops": 0,
+          "start": "2026-10-25 11:00:47 JST",
+          "mem_available_min_gib": 16.79,
+          "seconds_to_preds_written": 149.47,
+          "seconds_by_stage": {
+            "load_and_prepare_data": 81.86,
+            "load_model": 1.65,
+            "sample_context_and_fit": 17.53,
+            "sample_queries_and_predict": 48.4,
+            "total": 149.45,
+            "to_preds_written": 149.47
+          }
+        }
+      },
+      "16 16": {
+        "status": "done",
+        "val_auroc": 0.679026,
+        "rows": 76556,
+        "timing": {
+          "status": "done",
+          "wall_s_process": 256.1,
+          "flags": [],
+          "clean_timing": true,
+          "peak_rss_mb": 11818.1,
+          "peak_gpu_mb": 7621.2,
+          "fallback_used": null,
+          "infra_stops": 0,
+          "start": "2026-10-25 11:03:22 JST",
+          "mem_available_min_gib": 8.25,
+          "seconds_to_preds_written": 252.1,
+          "seconds_by_stage": {
+            "load_and_prepare_data": 81.85,
+            "load_model": 1.67,
+            "sample_context_and_fit": 40.05,
+            "sample_queries_and_predict": 128.51,
+            "total": 252.08,
+            "to_preds_written": 252.1
+          }
+        }
+      }
+    }
+  },
+  "configs": {
+    "k6": {
+      "label": "Kumo Relational, NVIDIA's settings, tables cut at the test date",
+      "role": "kumo_relational",
+      "runs_from": "k6",
+      "seeds": {
+        "s0": {
+          "test_auroc": 0.69925,
+          "script_value": 0.6992497444152832,
+          "rows": 74575,
+          "test_auroc_from_churn_scores": 0.69925
+        },
+        "s1": {
+          "test_auroc": 0.698348,
+          "script_value": 0.6983481645584106,
+          "rows": 74575,
+          "test_auroc_from_churn_scores": 0.698348
+        },
+        "s2": {
+          "test_auroc": 0.698741,
+          "script_value": 0.6987409591674805,
+          "rows": 74575,
+          "test_auroc_from_churn_scores": 0.698741
+        }
+      },
+      "test_auroc": {
+        "mean": 0.6988,
+        "min": 0.6983,
+        "max": 0.6993,
+        "n": 3
+      },
+      "seed0_timing": {
+        "status": "done",
+        "wall_s_process": 130.04,
+        "flags": [],
+        "clean_timing": true,
+        "peak_rss_mb": 12172.2,
+        "peak_gpu_mb": 2547.5,
+        "fallback_used": null,
+        "infra_stops": 0,
+        "start": "2026-10-25 10:52:21 JST",
+        "mem_available_min_gib": 21.64,
+        "seconds_to_preds_written": 125.8,
+        "seconds_by_stage": {
+          "load_and_prepare_data": 87.81,
+          "load_model": 1.21,
+          "sample_context_and_fit": 11.46,
+          "sample_queries_and_predict": 25.3,
+          "total": 125.78,
+          "to_preds_written": 125.8
+        }
+      },
+      "missing_seeds": []
+    },
+    "k7": {
+      "label": "Kumo Relational, no past labels, fan-out retuned (16 16)",
+      "role": "kumo_relational",
+      "runs_from": "k7",
+      "seeds": {
+        "s0": {
+          "test_auroc": 0.678508,
+          "script_value": 0.678507924079895,
+          "rows": 74575,
+          "test_auroc_from_churn_scores": 0.678508
+        },
+        "s1": {
+          "test_auroc": 0.67903,
+          "script_value": 0.6790304780006409,
+          "rows": 74575,
+          "test_auroc_from_churn_scores": 0.67903
+        },
+        "s2": {
+          "test_auroc": 0.67833,
+          "script_value": 0.6783301830291748,
+          "rows": 74575,
+          "test_auroc_from_churn_scores": 0.67833
+        }
+      },
+      "test_auroc": {
+        "mean": 0.6786,
+        "min": 0.6783,
+        "max": 0.679,
+        "n": 3
+      },
+      "seed0_timing": {
+        "status": "done",
+        "wall_s_process": 254.1,
+        "flags": [
+          "tenant_gpu_busy_at_start"
+        ],
+        "clean_timing": false,
+        "peak_rss_mb": 11796.7,
+        "peak_gpu_mb": 7584.5,
+        "fallback_used": null,
+        "infra_stops": 2,
+        "start": "2026-10-25 11:11:56 JST",
+        "mem_available_min_gib": 8.0,
+        "seconds_to_preds_written": 249.27,
+        "seconds_by_stage": {
+          "load_and_prepare_data": 81.82,
+          "load_model": 1.65,
+          "sample_context_and_fit": 39.91,
+          "sample_queries_and_predict": 125.87,
+          "total": 249.25,
+          "to_preds_written": 249.27
+        }
+      },
+      "missing_seeds": []
+    }
+  },
+  "k6_minus_k1_per_seed": {
+    "s0": 1e-06,
+    "s1": 1.4e-05,
+    "s2": -1.3e-05
+  },
+  "k7_minus_k3_per_seed": {
+    "s0": 0.088067,
+    "s1": 0.088824,
+    "s2": 0.087895
+  },
+  "l1_test_auroc": {
+    "mean": 0.6935,
+    "min": 0.6926,
+    "max": 0.6941,
+    "n": 3
+  },
+  "k6_mean_minus_l1_mean": 0.0053,
+  "k7_mean_minus_l1_mean": -0.0149,
+  "agreement_failures": []
+}

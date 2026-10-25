@@ -577,6 +577,114 @@
       "train_rows": [
         3832692
       ]
+    },
+    "k6": {
+      "label": "Kumo Relational, NVIDIA's settings, tables cut at the test date",
+      "role": "kumo_relational",
+      "runs_from": "k6",
+      "seeds": {
+        "s0": {
+          "test_auroc": 0.69925,
+          "script_value": 0.6992497444152832,
+          "rows": 74575,
+          "test_auroc_from_churn_scores": 0.69925
+        },
+        "s1": {
+          "test_auroc": 0.698348,
+          "script_value": 0.6983481645584106,
+          "rows": 74575,
+          "test_auroc_from_churn_scores": 0.698348
+        },
+        "s2": {
+          "test_auroc": 0.698741,
+          "script_value": 0.6987409591674805,
+          "rows": 74575,
+          "test_auroc_from_churn_scores": 0.698741
+        }
+      },
+      "test_auroc": {
+        "mean": 0.6988,
+        "min": 0.6983,
+        "max": 0.6993,
+        "n": 3
+      },
+      "seed0_timing": {
+        "status": "done",
+        "wall_s_process": 130.04,
+        "flags": [],
+        "clean_timing": true,
+        "peak_rss_mb": 12172.2,
+        "peak_gpu_mb": 2547.5,
+        "fallback_used": null,
+        "infra_stops": 0,
+        "start": "2026-10-25 10:52:21 JST",
+        "mem_available_min_gib": 21.64,
+        "seconds_to_preds_written": 125.8,
+        "seconds_by_stage": {
+          "load_and_prepare_data": 87.81,
+          "load_model": 1.21,
+          "sample_context_and_fit": 11.46,
+          "sample_queries_and_predict": 25.3,
+          "total": 125.78,
+          "to_preds_written": 125.8
+        }
+      },
+      "missing_seeds": []
+    },
+    "k7": {
+      "label": "Kumo Relational, no past labels, fan-out retuned (16 16)",
+      "role": "kumo_relational",
+      "runs_from": "k7",
+      "seeds": {
+        "s0": {
+          "test_auroc": 0.678508,
+          "script_value": 0.678507924079895,
+          "rows": 74575,
+          "test_auroc_from_churn_scores": 0.678508
+        },
+        "s1": {
+          "test_auroc": 0.67903,
+          "script_value": 0.6790304780006409,
+          "rows": 74575,
+          "test_auroc_from_churn_scores": 0.67903
+        },
+        "s2": {
+          "test_auroc": 0.67833,
+          "script_value": 0.6783301830291748,
+          "rows": 74575,
+          "test_auroc_from_churn_scores": 0.67833
+        }
+      },
+      "test_auroc": {
+        "mean": 0.6786,
+        "min": 0.6783,
+        "max": 0.679,
+        "n": 3
+      },
+      "seed0_timing": {
+        "status": "done",
+        "wall_s_process": 254.1,
+        "flags": [
+          "tenant_gpu_busy_at_start"
+        ],
+        "clean_timing": false,
+        "peak_rss_mb": 11796.7,
+        "peak_gpu_mb": 7584.5,
+        "fallback_used": null,
+        "infra_stops": 2,
+        "start": "2026-10-25 11:11:56 JST",
+        "mem_available_min_gib": 8.0,
+        "seconds_to_preds_written": 249.27,
+        "seconds_by_stage": {
+          "load_and_prepare_data": 81.82,
+          "load_model": 1.65,
+          "sample_context_and_fit": 39.91,
+          "sample_queries_and_predict": 125.87,
+          "total": 249.25,
+          "to_preds_written": 249.27
+        }
+      },
+      "missing_seeds": []
     }
   },
   "agreement_failures": [],

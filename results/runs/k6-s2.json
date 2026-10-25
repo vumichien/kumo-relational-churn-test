@@ -1,0 +1,59 @@
+{
+  "script": "nvidia-relbench-example.py",
+  "args": {
+    "dataset": "rel-hm",
+    "task": "user-churn",
+    "context_size": 20000,
+    "context_mode": "latest",
+    "batch_size": 10000,
+    "max_test_steps": null,
+    "num_neighbors": [
+      1,
+      1
+    ],
+    "num_estimators": 8,
+    "num_lags": 20,
+    "seed": 2,
+    "text": false,
+    "text_dim": 64,
+    "out": "~/kumo-relational-tds/results/runs/k6-s2.json",
+    "context_splits": "train,val",
+    "save_preds": "~/kumo-relational-tds/results/preds/k6-s2-test.parquet",
+    "dump_task_table": null,
+    "upto_test_timestamp": true,
+    "eval_split": "test"
+  },
+  "eval_split": "test",
+  "metric": "AUROC",
+  "value": 0.6987409591674805,
+  "device": "cuda",
+  "gpu": "NVIDIA GB10",
+  "torch": "2.14.0+cu130",
+  "relbench": "3.0.2",
+  "num_context_rows": 20000,
+  "num_query_rows": 74575,
+  "seconds": {
+    "load_and_prepare_data": 87.29,
+    "load_model": 1.17,
+    "sample_context_and_fit": 11.2,
+    "sample_queries_and_predict": 25.47,
+    "total": 125.13,
+    "to_preds_written": 125.15
+  },
+  "auroc_sklearn_from_preds": 0.6987409918231451,
+  "num_train_rows": 3832692,
+  "num_val_rows": 76556,
+  "num_test_rows": 74575,
+  "upto_test_timestamp": true,
+  "db_rows": {
+    "transactions": 15187287,
+    "article": 105542,
+    "customer": 1371980
+  },
+  "positive_class": 0,
+  "cuda_version": "13.0",
+  "peak_gpu_mb": 2548.6,
+  "peak_rss_mb": 12158.6,
+  "mem_available_start_gib": 38.46,
+  "mem_available_min_gib": 21.7
+}

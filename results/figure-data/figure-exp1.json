@@ -10,7 +10,12 @@
       "mean": 0.6988,
       "min": 0.6983,
       "max": 0.6992,
-      "n_seeds": 3
+      "n_seeds": 3,
+      "seeds": {
+        "s0": 0.699249,
+        "s1": 0.698334,
+        "s2": 0.698754
+      }
     },
     {
       "id": "K2",
@@ -20,7 +25,12 @@
       "mean": 0.6998,
       "min": 0.6994,
       "max": 0.7003,
-      "n_seeds": 3
+      "n_seeds": 3,
+      "seeds": {
+        "s0": 0.699393,
+        "s1": 0.699646,
+        "s2": 0.700274
+      }
     },
     {
       "id": "K3",
@@ -30,7 +40,12 @@
       "mean": 0.5904,
       "min": 0.5902,
       "max": 0.5904,
-      "n_seeds": 3
+      "n_seeds": 3,
+      "seeds": {
+        "s0": 0.590441,
+        "s1": 0.590206,
+        "s2": 0.590435
+      }
     },
     {
       "id": "K4",
@@ -40,7 +55,12 @@
       "mean": 0.6939,
       "min": 0.6937,
       "max": 0.6941,
-      "n_seeds": 3
+      "n_seeds": 3,
+      "seeds": {
+        "s0": 0.694067,
+        "s1": 0.693725,
+        "s2": 0.693827
+      }
     },
     {
       "id": "K5",
@@ -50,7 +70,12 @@
       "mean": 0.6965,
       "min": 0.6959,
       "max": 0.6972,
-      "n_seeds": 3
+      "n_seeds": 3,
+      "seeds": {
+        "s0": 0.695913,
+        "s1": 0.69724,
+        "s2": 0.696206
+      }
     },
     {
       "id": "T1",
@@ -60,7 +85,12 @@
       "mean": 0.6927,
       "min": 0.6925,
       "max": 0.693,
-      "n_seeds": 3
+      "n_seeds": 3,
+      "seeds": {
+        "s0": 0.692492,
+        "s1": 0.692952,
+        "s2": 0.692777
+      }
     },
     {
       "id": "L1",
@@ -70,7 +100,12 @@
       "mean": 0.6935,
       "min": 0.6926,
       "max": 0.6941,
-      "n_seeds": 3
+      "n_seeds": 3,
+      "seeds": {
+        "s0": 0.693908,
+        "s1": 0.694091,
+        "s2": 0.692619
+      }
     },
     {
       "id": "L2",
@@ -80,11 +115,48 @@
       "mean": 0.6945,
       "min": 0.6944,
       "max": 0.6946,
-      "n_seeds": 3
+      "n_seeds": 3,
+      "seeds": {
+        "s0": 0.694631,
+        "s1": 0.694451,
+        "s2": 0.694392
+      }
+    },
+    {
+      "id": "K6",
+      "label": "Kumo Relational, NVIDIA's settings, tables cut at the test date",
+      "role": "kumo_relational",
+      "colour": "BLUE #1971c2",
+      "mean": 0.6988,
+      "min": 0.6983,
+      "max": 0.6993,
+      "n_seeds": 3,
+      "seeds": {
+        "s0": 0.69925,
+        "s1": 0.698348,
+        "s2": 0.698741
+      }
+    },
+    {
+      "id": "K7",
+      "label": "Kumo Relational, no past labels, fan-out retuned (16 16)",
+      "role": "kumo_relational",
+      "colour": "BLUE #1971c2",
+      "mean": 0.6786,
+      "min": 0.6783,
+      "max": 0.679,
+      "n_seeds": 3,
+      "seeds": {
+        "s0": 0.678508,
+        "s1": 0.67903,
+        "s2": 0.67833
+      }
     }
   ],
   "reference_lines": {
     "NVIDIA README, same settings": 0.6992,
     "RelBench user study data scientist (KumoRFM whitepaper Table 2)": 0.69
-  }
+  },
+  "seeds_source": "exp1-summary.json, configs.<id>.seeds.<s>.test_auroc (added in phase 3)",
+  "phase5_note": "K6 and K7 added in phase 5 from exp1-summary.json (analyze-phase1.py --phase5)"
 }

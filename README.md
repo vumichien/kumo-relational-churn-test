@@ -13,11 +13,12 @@ results/       the aggregate results: one JSON per run, the summaries, and the d
 
 | Script | What it does |
 |---|---|
-| `experiments/nvidia-relbench-example.py` | NVIDIA's RelBench example for Kumo Relational, copied from [NVIDIA/structured-data-models](https://github.com/NVIDIA/structured-data-models) (`examples/relational/relbench/main.py`, commit `f8d054c`, Apache-2.0) with timing, memory, a result file, saved predictions and a `--context_splits` option added; the modelling code is unchanged. Runs K1–K5 and the context sweep S1–S2. |
+| `experiments/nvidia-relbench-example.py` | NVIDIA's RelBench example for Kumo Relational, copied from [NVIDIA/structured-data-models](https://github.com/NVIDIA/structured-data-models) (`examples/relational/relbench/main.py`, commit `f8d054c`, Apache-2.0) with timing, memory, a result file, saved predictions and the `--context_splits`, `--upto_test_timestamp` (tables cut at the test date) and `--eval_split val` (score the validation week, for tuning) options added; the modelling code is unchanged. Runs K1–K7 and the context sweep S1–S2. |
 | `experiments/kumo-tabular-hm-churn.py` | T1: Kumo Tabular reads the data scientist's 71 hand-built features. |
 | `experiments/lgbm-hm-churn.py` | L1 and L2: tuned LightGBM on the hand-built features, and on the customer table plus the 20 past churn labels Kumo Relational builds. `--build_only` renders the features. |
 | `experiments/cooccurrence-test.py` | Experiment 2: a synthetic two-table shop where a customer churns only if one single order was both late and refunded (C1–C5). |
-| `experiments/analyze-phase1.py` | Recomputes every AUROC from the saved predictions with scikit-learn and writes the summaries in `results/`. |
+| `experiments/analyze-phase1.py` | Recomputes every AUROC from the saved predictions with scikit-learn and writes the summaries in `results/`; `--phase5` does the same for K6 and K7 (`results/phase5-summary.json`). |
+| `experiments/run-phase5.py` | The two follow-up checks: K6 (K1 on tables cut at the test date) and K7 (K3 with its neighbour count tuned on the validation week, then three test seeds). Reuses `run-phase1.py`'s run machinery. |
 | `experiments/run-phase1.py`, `run-phase1.sh` | The driver: runs every stage in order, one heavy job at a time, and can be restarted (finished runs are skipped). |
 | `experiments/memory_guard.py` | Refuses to start under 20 GiB of free memory and stops a run cleanly under 8 GiB, so a shared machine's other users are never pushed out. |
 | `experiments/spark-setup.sh`, `wsl-setup.sh` | Build the environment (GB10 aarch64; or WSL with a CUDA GPU) with the pinned versions in `experiments/pip-freeze-pilot.txt`. |
@@ -37,6 +38,8 @@ Test AUROC on H&M churn, mean of three seeds (min–max in brackets), from `resu
 | T1 | Kumo Tabular on the hand-built features | 0.6927 (0.6925–0.6930) |
 | L1 | tuned LightGBM on the hand-built features, all 3,832,692 training rows | 0.6935 (0.6926–0.6941) |
 | L2 | tuned LightGBM on the customer table and the past labels | 0.6945 (0.6944–0.6946) |
+| K6 | K1 on tables cut at the test date | 0.6988 (0.6983–0.6993) |
+| K7 | K3 with 16 sampled neighbours per hop, tuned on the validation week (1, 4 and 16 tried) | 0.6786 (0.6783–0.6790) |
 
 The first K1 run reproduces NVIDIA's published 0.6992 (`results/gate.json`: 0.69925). The synthetic test is in `results/exp2-summary.json` and the context sweep in `results/context-sweep.json`.
 
@@ -49,6 +52,8 @@ git clone https://github.com/vumichien/kumo-relational-churn-test ~/kumo-relatio
 cd ~/kumo-relational-tds
 bash experiments/spark-setup.sh            # or experiments/wsl-setup.sh on WSL with a CUDA GPU
 bash experiments/run-phase1.sh             # all stages; --until <stage> stops early
+HF_HOME=~/kumo-relational-tds/cache/hf .venv/bin/python -I experiments/run-phase5.py   # K6 and K7, after phase 1
+.venv/bin/python -I experiments/analyze-phase1.py --phase5
 ```
 
 To run one configuration by hand, for example K1 with seed 0:

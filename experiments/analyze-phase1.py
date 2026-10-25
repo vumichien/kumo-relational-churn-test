@@ -11,6 +11,11 @@ figure-data/figure-exp1.json, figure-data/figure-exp2.json, figure-data/figure-c
 prose-facts.json.
 
 Run (spark, stage analyze):  ~/kumo-relational-tds/.venv/bin/python -I analyze-phase1.py
+
+Phase 5 (`--phase5`): recomputes K6 (K1 on the database cut at the test timestamp) and K7 (K3
+with its fan-out retuned on the validation week) the same way, writes results/phase5-summary.json,
+and adds k6 and k7 to exp1-summary.json's configs without touching anything else (the figure data
+and prose facts stay as phase 1 wrote them).
 """
 
 import json
@@ -256,4 +261,65 @@ def main() -> None:
         sys.exit(1)
 
 
-main()
+def phase5() -> None:
+    tuning = load(RES / "phase5-k7-tuning.json")
+    pick = tuning["pick"]
+    k7_source = "k3" if pick == "1 1" else "k7"  # a 1 1 pick is K3 itself; nothing reran
+    val = {}
+    for fanout, cand in tuning["candidates"].items():
+        p = RES / "preds" / f"{cand['run']}-val.parquet"
+        entry = {"status": cand["status"]}
+        if cand["status"] == "done" and p.exists():
+            v = pd.read_parquet(p)
+            entry["val_auroc"] = round(auroc(v["label"].to_numpy(), v["score"].to_numpy()), 6)
+            entry["rows"] = len(v)
+            check(cand["run"] + " (val)", (load(RES / "runs" / f"{cand['run']}.json") or {}).get("value"),
+                  entry["val_auroc"])
+        entry["timing"] = timing(cand["run"])
+        val[fanout] = entry
+    configs = {}
+    for key, source, label in (("k6", "k6", "Kumo Relational, NVIDIA's settings, tables cut at the test date"),
+                               ("k7", k7_source, f"Kumo Relational, no past labels, fan-out retuned ({pick})")):
+        runs = {f"s{s}": single_run(f"{source}-s{s}") for s in SEEDS}
+        values = [r["test_auroc"] for r in runs.values() if r]
+        configs[key] = {"label": label, "role": "kumo_relational", "runs_from": source, "seeds": runs,
+                        "test_auroc": stats(values), "seed0_timing": timing(f"{source}-s0"),
+                        "missing_seeds": [s for s, r in runs.items() if r is None]}
+    db_rows = {f"s{s}": (load(RES / "runs" / f"k6-s{s}.json") or {}).get("db_rows") for s in SEEDS}
+    full = load(RES / "prose-facts.json")["tables"]
+    k1 = {s: single_run(f"k1-s{s}")["test_auroc"] for s in SEEDS}
+    k6 = {s: configs["k6"]["seeds"][f"s{s}"]["test_auroc"] for s in SEEDS}
+    k3 = {s: single_run(f"k3-s{s}")["test_auroc"] for s in SEEDS}
+    k7 = {s: configs["k7"]["seeds"][f"s{s}"]["test_auroc"] for s in SEEDS}
+    l1 = load(RES / "exp1-summary.json")["configs"]["l1"]["test_auroc"]
+    summary = {
+        "k6_db_rows": db_rows, "k1_db_rows_full_tables": full,
+        "k6_tables_smaller_than_k1": {s: {t: (r or {}).get(t, 0) < n for t, n in full.items()}
+                                      for s, r in db_rows.items()},
+        "k7_tuning": {"rule": tuning["rule"], "pick": pick, "validation": val},
+        "configs": configs,
+        "k6_minus_k1_per_seed": {f"s{s}": round(k6[s] - k1[s], 6) for s in SEEDS},
+        "k7_minus_k3_per_seed": {f"s{s}": round(k7[s] - k3[s], 6) for s in SEEDS},
+        "l1_test_auroc": l1,
+        "k6_mean_minus_l1_mean": round(configs["k6"]["test_auroc"]["mean"] - l1["mean"], 4),
+        "k7_mean_minus_l1_mean": round(configs["k7"]["test_auroc"]["mean"] - l1["mean"], 4),
+        "agreement_failures": agreement_failures,
+    }
+    (RES / "phase5-summary.json").write_text(json.dumps(summary, indent=2))
+    exp1_path = RES / "exp1-summary.json"
+    doc = json.loads(exp1_path.read_text())
+    doc["configs"].update(configs)
+    exp1_path.write_text(json.dumps(doc, indent=2))
+    print(json.dumps({k: summary[k] for k in ("k6_minus_k1_per_seed", "k7_minus_k3_per_seed",
+                                              "k6_mean_minus_l1_mean", "k7_mean_minus_l1_mean",
+                                              "agreement_failures")}
+                     | {"k6": configs["k6"]["test_auroc"], "k7": configs["k7"]["test_auroc"],
+                        "val": {k: v.get("val_auroc", v["status"]) for k, v in val.items()}}, indent=2))
+    if agreement_failures:
+        sys.exit(1)
+
+
+if "--phase5" in sys.argv:
+    phase5()
+else:
+    main()

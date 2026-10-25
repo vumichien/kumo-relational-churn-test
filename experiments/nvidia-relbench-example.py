@@ -13,7 +13,15 @@
 #   AUROC uses, which are for the script's positive_class, and P(target = 1) with the target);
 # - --dump_task_table: the task table with its lag columns, all three splits, as parquet;
 # - the memory guard (memory_guard.py), 10 torch CPU threads, and freeing the pandas frames
-#   once the task table is a tensor.
+#   once the task table is a tensor;
+# - --upto_test_timestamp (default off, as NVIDIA's example): load the database with
+#   task.get_db(upto_test_timestamp=True). In relbench 3.0.2, Dataset.get_db then calls
+#   Database.upto(test_timestamp), and Table.upto keeps rows with time_col <= the test
+#   timestamp (inclusive) in every table that has a time column; tables without one are
+#   returned unchanged. For rel-hm only `transactions` has a time column. The row count of
+#   every table is written to the result file (db_rows) either way;
+# - --eval_split: "test" (default, NVIDIA's behaviour) or "val" (context from the training
+#   weeks only, queries are the validation week; for tuning without touching the test week).
 
 import argparse
 import gc
@@ -145,6 +153,8 @@ parser.add_argument("--out", type=str, default=None)
 parser.add_argument("--context_splits", choices=("train,val", "train"), default="train,val")
 parser.add_argument("--save_preds", type=str, default=None)
 parser.add_argument("--dump_task_table", type=str, default=None)
+parser.add_argument("--upto_test_timestamp", action="store_true")
+parser.add_argument("--eval_split", choices=("test", "val"), default="test")
 args = parser.parse_args()
 torch.set_num_threads(10)
 
@@ -171,7 +181,9 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 # Collect Relational Data #####################################################
 dataset = relbench.load_dataset(args.dataset)
 task = dataset.load_task(args.task)
-db = task.get_db(upto_test_timestamp=False)
+db = task.get_db(upto_test_timestamp=args.upto_test_timestamp)
+_db_rows = {name: len(table.df) for name, table in db.table_dict.items()}
+print(f"[db] upto_test_timestamp={args.upto_test_timestamp}: {_db_rows}", flush=True)
 tables = {
     name: sdm.TableTensor.from_pandas(
         df=table.df,
@@ -282,12 +294,17 @@ if args.dump_task_table:
     _dump["split"] = ["train"] * _n_train + ["val"] * _n_val + ["test"] * _n_test
     _dump.to_parquet(args.dump_task_table, index=False)
     del _dump
-if args.context_splits == "train":
+if args.eval_split == "val":
+    if args.context_splits != "train":
+        quit("--eval_split val needs --context_splits train")
+    context, query, _ = task_table.split([_n_train, _n_val, _n_test])
+elif args.context_splits == "train":
     context, _, query = task_table.split([_n_train, _n_val, _n_test])
 else:
     context, query = task_table.split([_n_train + _n_val, _n_test])
 positive_class = dfs[0][task.target_col].unique()[-1].item()
-_query_keys = dfs[2][[task.entity_col, task.time_col]].reset_index(drop=True)
+_query_keys = dfs[1 if args.eval_split == "val" else 2][
+    [task.entity_col, task.time_col]].reset_index(drop=True)
 if not args.text:  # Free the pandas frames; the task table is a tensor now.
     for _name in ("df", "dfs", "left", "right", "merged"):  # merged is unset when num_lags is 0
         globals().pop(_name, None)
@@ -443,7 +460,8 @@ print(f"{_name}: {_value:.4f}")
 _result = {
     "script": "nvidia-relbench-example.py",
     "args": vars(args),
-    "metric": _name,
+    "eval_split": args.eval_split,
+    "metric": _name if args.eval_split == "test" else f"val_{_name}",
     "value": _value,
     "device": str(device),
     "gpu": torch.cuda.get_device_name(0) if device.type == "cuda" else None,
@@ -463,6 +481,8 @@ _result = {
     "num_train_rows": _n_train,
     "num_val_rows": _n_val,
     "num_test_rows": _n_test,
+    "upto_test_timestamp": args.upto_test_timestamp,
+    "db_rows": _db_rows,
     "positive_class": positive_class,
     "cuda_version": torch.version.cuda,
     "peak_gpu_mb": round(torch.cuda.max_memory_allocated() / 2**20, 1)
