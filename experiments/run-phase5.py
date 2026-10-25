@@ -2,7 +2,7 @@
 
 K6: K1 on the database cut at the test timestamp (--upto_test_timestamp), seeds 0-2.
 K7: K3 (no past labels) with its neighbour fan-out retuned on the validation week. Seed 0 of
-K3 at --num_neighbors 1 1, 4 4 and 16 16 with --eval_split val (context from the training weeks,
+K3 at --num_neighbors 1 1, 4 4, 16 16 and 32 32 with --eval_split val (context from the training weeks,
 queries are the validation week); the best validation AUROC (sklearn, from the saved
 predictions) is the pick. If the pick is 1 1, K3's three test seeds already are K7 and nothing
 reruns; otherwise K3 with the picked fan-out runs on the test week, seeds 0-2.
@@ -32,7 +32,7 @@ _spec.loader.exec_module(rp1)
 
 RES, STATE, LOGS = rp1.RES, rp1.STATE, rp1.LOGS
 K3 = rp1.KUMO_CONFIGS["k3"]
-FANOUTS = (1, 4, 16)
+FANOUTS = (1, 4, 16, 32)  # 32 added after 16 won at the edge of the first grid
 BATCH_FALLBACK = ["--batch_size", "2000"]
 
 
@@ -71,18 +71,19 @@ def run(spec: dict, max_stops: int, candidate: bool) -> dict:
             result = json.loads(spec["result"].read_text())
             info.update(status="done", result_file=str(spec["result"].relative_to(rp1.ROOT)),
                         preds_files=[str(p.relative_to(rp1.ROOT)) for p in spec["preds"]],
-                        auroc=result["value"], auroc_sklearn=result["auroc_sklearn_from_preds"],
+                        auroc=result["value"], auroc_sklearn=result.get("auroc_sklearn_from_preds", result["value"]),
                         eval_split=result.get("eval_split"), db_rows=result.get("db_rows"),
                         peak_rss_mb=result.get("peak_rss_mb"), peak_gpu_mb=result.get("peak_gpu_mb"),
                         mem_available_min_gib=result.get("mem_available_min_gib"),
                         fallback_used=extra or None, attempts=attempts, infra_stops=stops)
             marker.write_text(json.dumps(info, indent=2))
-            rp1.log(f"done {spec['id']}: {result['metric']} {result['value']:.6f} "
+            rp1.log(f"done {spec['id']}: {result.get('metric', 'test AUROC')} {result['value']:.6f} "
                     f"in {info['wall_s']:.0f} s, flags {info['flags']}")
             return info
         if info["start_floor_refusal"]:
             continue
-        if info["oom_in_log"] and info["mem_available_min_gib_driver"] >= rp1.STOP_FLOOR_GIB and not extra:
+        if (info["oom_in_log"] and info["mem_available_min_gib_driver"] >= rp1.STOP_FLOOR_GIB and not extra
+                and spec["script"] == "nvidia-relbench-example.py"):
             rp1.log(f"{spec['id']}: out of memory with memory available; retry with {BATCH_FALLBACK}")
             extra = BATCH_FALLBACK
             continue
@@ -131,11 +132,11 @@ def main() -> None:
     pick = max(fitted, key=lambda k: fitted[k]["val_auroc_sklearn"])
     n = int(pick.split()[0])
     decision = {
-        "rule": "best validation AUROC (sklearn from saved predictions) among 1 1, 4 4, 16 16; seed 0; "
+        "rule": "best validation AUROC (sklearn from saved predictions) among FANOUTS (1 1, 4 4, 16 16, 32 32); seed 0; "
                 "K3 settings otherwise, context from the training weeks only, queries the validation week",
         "candidates": tuning, "pick": pick, "time": rp1.now(),
         "k7_runs": ("k3-s0, k3-s1, k3-s2 (the pick is K3's own fan-out; nothing reran)" if n == 1
-                    else "k7-s0, k7-s1, k7-s2"),
+                    else "k7-s0, k7-s1, k7-s2" if n == 16 else f"k7-nn{n}-s0, k7-nn{n}-s1, k7-nn{n}-s2"),
     }
     (RES / "phase5-k7-tuning.json").write_text(json.dumps(decision, indent=2))
     rp1.log(f"K7 pick: {pick}")
@@ -143,10 +144,29 @@ def main() -> None:
     if n != 1:
         for s in (0, 1, 2):
             args = rp1.override(K3, num_neighbors=[str(n), str(n)])
-            run(spec_for(f"k7-s{s}", "k7", args + ["--seed", str(s)], "test"), max_stops=3, candidate=False)
+            rid = f"k7-s{s}" if n == 16 else f"k7-nn{n}-s{s}"  # the first pick, 16 16, ran as k7-s*
+            run(spec_for(rid, "k7", args + ["--seed", str(s)], "test"), max_stops=3, candidate=False)
     status(run=None, done=rp1.now())
     rp1.log("phase 5 driver finished")
 
 
+def main_l3() -> None:
+    """L3: LightGBM on the data scientist's 71 features plus the 20 past churn labels, seeds 0-2.
+
+    Added after the third gate's first round asked for the control no earlier run had; registered
+    in docs/run-log.md before it ran. Same tuning as L1 (10 trials on validation AUROC)."""
+    Path("/proc/self/oom_score_adj").write_text("1000")
+    rp1.log("phase 5 driver start (L3)")
+    for s in (0, 1, 2):
+        rid = f"l3-s{s}"
+        run({"id": rid, "config": "l3", "script": "lgbm-hm-churn.py",
+             "args": ["--features", "ds_lags", "--seed", str(s), "--trials", "10"],
+             "result": RES / "runs" / f"{rid}.json",
+             "preds": [RES / "preds" / f"{rid}-test.parquet", RES / "preds" / f"{rid}-val.parquet"]},
+            max_stops=3, candidate=False)
+    status(run=None, done=rp1.now())
+    rp1.log("phase 5 driver finished (L3)")
+
+
 if __name__ == "__main__":
-    main()
+    main_l3() if "--l3" in sys.argv else main()

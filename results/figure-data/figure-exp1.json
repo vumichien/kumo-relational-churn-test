@@ -151,6 +151,21 @@
         "s1": 0.67903,
         "s2": 0.67833
       }
+    },
+    {
+      "id": "L3",
+      "label": "LightGBM on the hand-built features + customer id + past labels (tuned)",
+      "role": "flat_table",
+      "colour": "ORANGE #e8590c",
+      "mean": 0.702,
+      "min": 0.7017,
+      "max": 0.7022,
+      "n_seeds": 3,
+      "seeds": {
+        "s0": 0.701709,
+        "s1": 0.702127,
+        "s2": 0.702203
+      }
     }
   ],
   "reference_lines": {

@@ -1,5 +1,5 @@
 {
-  "rule": "best validation AUROC (sklearn from saved predictions) among 1 1, 4 4, 16 16; seed 0; K3 settings otherwise, context from the training weeks only, queries the validation week",
+  "rule": "best validation AUROC (sklearn from saved predictions) among FANOUTS (1 1, 4 4, 16 16, 32 32); seed 0; K3 settings otherwise, context from the training weeks only, queries the validation week",
   "candidates": {
     "1 1": {
       "status": "done",
@@ -27,9 +27,18 @@
       "peak_rss_mb": 11818.1,
       "peak_gpu_mb": 7621.2,
       "wall_s": 256.1
+    },
+    "32 32": {
+      "status": "did_not_fit",
+      "val_auroc_sklearn": null,
+      "val_auroc_script": null,
+      "run": "k7val-nn32-s0",
+      "peak_rss_mb": null,
+      "peak_gpu_mb": null,
+      "wall_s": 104.04
     }
   },
   "pick": "16 16",
-  "time": "2026-10-25 11:07:38 JST",
+  "time": "2026-10-25 11:40:24 JST",
   "k7_runs": "k7-s0, k7-s1, k7-s2"
 }

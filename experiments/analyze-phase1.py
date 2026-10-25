@@ -121,7 +121,7 @@ def single_run(run_id: str) -> dict | None:
         v = pd.read_parquet(val)
         out["val_auroc"] = round(auroc(v["label"].to_numpy(), v["score"].to_numpy()), 6)
         check(run_id + " (val)", result.get("val_auroc"), out["val_auroc"])
-    if run_id.startswith(("l1", "l2")):
+    if run_id.startswith(("l1", "l2", "l3")):
         out["train_rows"] = result.get("train_rows")
         out["train_subsample"] = result.get("train_subsample")
         out["best_params"] = result.get("best_params")
@@ -285,6 +285,13 @@ def phase5() -> None:
         configs[key] = {"label": label, "role": "kumo_relational", "runs_from": source, "seeds": runs,
                         "test_auroc": stats(values), "seed0_timing": timing(f"{source}-s0"),
                         "missing_seeds": [s for s, r in runs.items() if r is None]}
+    l3_runs = {f"s{s}": single_run(f"l3-s{s}") for s in SEEDS}
+    if all(l3_runs.values()):  # L3 ran after the third gate's first round
+        configs["l3"] = {"label": "LightGBM on the hand-built features + customer id + past labels (tuned)",
+                         "role": "flat_table", "runs_from": "l3", "seeds": l3_runs,
+                         "test_auroc": stats([r["test_auroc"] for r in l3_runs.values()]),
+                         "val_auroc": stats([r["val_auroc"] for r in l3_runs.values()]),
+                         "seed0_timing": timing("l3-s0"), "missing_seeds": []}
     db_rows = {f"s{s}": (load(RES / "runs" / f"k6-s{s}.json") or {}).get("db_rows") for s in SEEDS}
     full = load(RES / "prose-facts.json")["tables"]
     k1 = {s: single_run(f"k1-s{s}")["test_auroc"] for s in SEEDS}
@@ -305,6 +312,16 @@ def phase5() -> None:
         "k7_mean_minus_l1_mean": round(configs["k7"]["test_auroc"]["mean"] - l1["mean"], 4),
         "agreement_failures": agreement_failures,
     }
+    if "l3" in configs:
+        l3 = {s: configs["l3"]["seeds"][f"s{s}"]["test_auroc"] for s in SEEDS}
+        l1s = {s: single_run(f"l1-s{s}")["test_auroc"] for s in SEEDS}
+        summary.update({
+            "l3_minus_k1_per_seed": {f"s{s}": round(l3[s] - k1[s], 6) for s in SEEDS},
+            "l3_minus_l1_per_seed": {f"s{s}": round(l3[s] - l1s[s], 6) for s in SEEDS},
+            "l3_mean_minus_k1_mean": round(configs["l3"]["test_auroc"]["mean"]
+                                           - float(np.mean(list(k1.values()))), 4),
+            "l3_min_above_k1_max": min(l3.values()) > max(k1.values()),
+        })
     (RES / "phase5-summary.json").write_text(json.dumps(summary, indent=2))
     exp1_path = RES / "exp1-summary.json"
     doc = json.loads(exp1_path.read_text())
@@ -312,8 +329,9 @@ def phase5() -> None:
     exp1_path.write_text(json.dumps(doc, indent=2))
     print(json.dumps({k: summary[k] for k in ("k6_minus_k1_per_seed", "k7_minus_k3_per_seed",
                                               "k6_mean_minus_l1_mean", "k7_mean_minus_l1_mean",
-                                              "agreement_failures")}
+                                              "agreement_failures") + tuple(k for k in summary if k.startswith("l3_"))}
                      | {"k6": configs["k6"]["test_auroc"], "k7": configs["k7"]["test_auroc"],
+                        "l3": configs.get("l3", {}).get("test_auroc"),
                         "val": {k: v.get("val_auroc", v["status"]) for k, v in val.items()}}, indent=2))
     if agreement_failures:
         sys.exit(1)

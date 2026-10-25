@@ -9,6 +9,8 @@ the same way and parsed as text, not executed).
 L2 (--features auto): automatic inputs only: the customer table's columns plus the same 20 past
 churn labels Kumo Relational's K1 builds, read from the task table the gate run dumped
 (data/hm-task-table-lags20.parquet); stypes inferred with torch_frame's infer_df_stype.
+L3 (--features ds_lags): L1's features plus the same 20 past churn labels, joined from that task
+table on (customer_id, timestamp) in every split; the lag columns are categorical, as in L2.
 
 Tuning follows the study's train_gbdt.py: torch_frame's LightGBM (pytorch-frame 0.3.0,
 torch_frame/gbdt/tuned_lightgbm.py) with tune(num_trials=10) on validation AUROC, then predict
@@ -25,7 +27,7 @@ rows. --subsample N (the fallback when the full training table doesn't fit) uses
 `using sample` clause, made repeatable: `using sample reservoir(N rows) repeatable (0)`.
 
 Writes results/runs/<id>.json and results/preds/<id>-test.parquet and -val.parquet, where <id>
-is l1-s<seed> or l2-s<seed>.
+is l1-s<seed>, l2-s<seed> or l3-s<seed>.
 
 Run (spark):  HF_HOME=~/kumo-relational-tds/cache/hf taskset -c 5-9,15-19 \
     ~/kumo-relational-tds/.venv/bin/python -I lgbm-hm-churn.py --features ds --seed 0
@@ -61,14 +63,14 @@ ID_COLS = ["customer_id", "timestamp"]
 TARGET = "churn"
 
 parser = argparse.ArgumentParser()
-parser.add_argument("--features", choices=["ds", "auto"], required=True)
+parser.add_argument("--features", choices=["ds", "auto", "ds_lags"], required=True)
 parser.add_argument("--seed", type=int, default=0)
 parser.add_argument("--subsample", type=int, default=0)
 parser.add_argument("--trials", type=int, default=10)
 parser.add_argument("--build_only", action="store_true")
 parser.add_argument("--run_id", type=str, default=None)
 args = parser.parse_args()
-RUN_ID = args.run_id or f"{'l1' if args.features == 'ds' else 'l2'}-s{args.seed}"
+RUN_ID = args.run_id or f"{ {'ds': 'l1', 'auto': 'l2', 'ds_lags': 'l3'}[args.features] }-s{args.seed}"
 
 T0 = time.perf_counter()
 log: dict = {"script": "lgbm-hm-churn.py", "args": vars(args), "run_id": RUN_ID, "stages": {}}
@@ -236,7 +238,7 @@ def main() -> None:
     task = relbench.load_dataset("rel-hm").load_task("user-churn")
     labels = {s: task.get_table(s, mask_input_cols=False).df for s in ["val", "test"]}
     t = time.perf_counter()
-    if args.features == "ds":
+    if args.features in ("ds", "ds_lags"):
         subsample = args.subsample
         if subsample == 0 and (FEATS / "manifest.json").exists():
             subsample = json.loads((FEATS / "manifest.json").read_text())["subsample"]
@@ -250,6 +252,22 @@ def main() -> None:
         stypes = study_stypes()
         log["train_subsample"] = subsample
         log["stype_source"] = f"relbench-user-study {COMMIT[:7]} inferred_stypes.py"
+        if args.features == "ds_lags":
+            tt = pd.read_parquet(TASK_TABLE)
+            lag_cols = [c for c in tt.columns if c.startswith(f"{TARGET}_lag_")]
+            for s_ in frames:
+                part = tt.loc[tt["split"] == s_, ["customer_id", "timestamp", *lag_cols]]
+                part = part.astype({"timestamp": frames[s_]["timestamp"].dtype,
+                                    "customer_id": frames[s_]["customer_id"].dtype})
+                before = len(frames[s_])
+                merged = frames[s_].merge(part, on=["customer_id", "timestamp"], how="left",
+                                          validate="one_to_one", indicator=True)
+                found = int((merged.pop("_merge") == "both").sum())
+                assert len(merged) == before and found == before, (s_, before, len(merged), found)
+                frames[s_] = merged
+                log.setdefault("lag_rows_matched", {})[s_] = found
+            stypes = {**stypes, **dict.fromkeys(lag_cols, "categorical")}
+            log["lag_columns"] = len(lag_cols)
     else:
         import torch_frame
         from torch_frame.utils import infer_df_stype
